@@ -11,6 +11,13 @@ public class InGameObject {
 		this.y = y;
 		this.type = type;
 	}
+	
+	InGameObject(int x, int y, Type type, Direction direction) {
+		this.x = x;
+		this.y = y;
+		this.type = type;
+		this.direction = direction;
+	}
 
 	public int getSize() {
 		return size;
