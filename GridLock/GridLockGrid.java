@@ -55,9 +55,9 @@ public class GridLockGrid extends JPanel {
 		
 		gridState = new int[][] {
 			{ 1,  1, -1, -1, -1, -1},
+			{ 2, -1, -1, -1, -1, -1},
+			{ 2, -1, -1, -1, -1, -1},
 			{-1, -1, -1, -1, -1, -1},
-			{ 2, -1, -1, -1, -1, -1},
-			{ 2, -1, -1, -1, -1, -1},
 			{-1, -1, -1, -1, -1, -1},
 			{-1, -1, -1, -1, -1, -1}
 		};
@@ -82,6 +82,16 @@ public class GridLockGrid extends JPanel {
 			initGrid();
 		}
 		
+		public int roundNearestHundred(int val) {
+			int value = val;
+			if (value < BORDER_OFFSET) return BORDER_OFFSET;
+			if (value > GRID_LENGTH) return GRID_LENGTH;
+			if (value % 100 < 50)
+				for (; value % 100 != BORDER_OFFSET; value -= 1) {}
+			else if (value % 100 > 50) 
+				for (; value % 100 != BORDER_OFFSET; value += 1) {}
+			return value;
+		}
 		public void initGrid() {
 			setPreferredSize(new Dimension(620, 620));
 			setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
@@ -91,7 +101,6 @@ public class GridLockGrid extends JPanel {
 				
 				@Override
 				public void mousePressed(MouseEvent e) {
-					System.out.println(e.getX() + " " + e.getY());
 					// check if clicked on a car
 					currSelected = selected;
 					if (selected == null || !selected.contains(e.getPoint())) {
@@ -113,60 +122,54 @@ public class GridLockGrid extends JPanel {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					// clicking anything else again deselect
-					if (selected == currSelected) {
+					if (selected != null && selected == currSelected) {
+						selected.setX(roundNearestHundred(selected.getX()));
+						selected.setY(roundNearestHundred(selected.getY()));
 						selected = null;
 						repaint();
 					}
 				}
 				
 				@Override
+			    public void mouseReleased(MouseEvent e) {
+					System.out.println("dsada");
+					if (selected != null) { 
+						selected.setX(roundNearestHundred(selected.getX()));
+						selected.setY(roundNearestHundred(selected.getY()));
+						int row = selected.getY() - BORDER_OFFSET;
+						int col = selected.getX() - BORDER_OFFSET;
+						System.out.println(row + " " + col);
+						
+					}
+					repaint();
+				}
+				
+				@Override
 				// move selected car to new position (e.getX, e.getY)
 				public void mouseDragged(MouseEvent e) {
 					if (selected != null) {
-						int x = e.getX() - delta.x;
-						int y = e.getY() - delta.y;
+						int leftX = e.getX() - delta.x;
+						int leftY = e.getY() - delta.y;
+						// delta.y -> value from top to where click,  e.getY -> value from top of panel
 						if (selected.orientation().equals("h")) {
-							// change to use array -> /100 etc to get array position and see if can drag 
 							// prevent going outside grid on left
-							if (x < BORDER_OFFSET) 
+							if (leftX < BORDER_OFFSET) 
 								selected.setX(BORDER_OFFSET);
 							// prevent going outside grid on right
-							else if (x + selected.getLength() > GRID_LENGTH + BORDER_OFFSET)
+							else if (leftX + selected.getLength() > GRID_LENGTH + BORDER_OFFSET)
 								selected.setX(GRID_LENGTH + BORDER_OFFSET - selected.getLength());
-							// if array -> grid -> empty -> go there else -> dont go anywhere
-							else { 
-								//System.out.println(e.getX() + " " + e.getY()); // prints as long as you drag  so can get exact eg 400 x ord -> /100 -> array[][4]
-								// but depends on where you click
-								// use x  -> position of left (only x) thanks to delta 
-									// so x = 300 -> col 3 ie gridState[][3]
-									// REMEBER TO DO THINGS RELATIVE TO LEFT OF RECTANGLE  (only x)
-								// remember cars have white border
-								// array location   point/100    (only looking at top left)
-								// car class -> horizontal/vertical     size    
-									// -> trymove ->   if selected.getX() getY() (remember left)  -> get array position -> 
-										// if eg vertical size 2 ->   array[Y + size-1][X ]  -> gets position in array 
-											// y gets which row    + size-1  to get end point (depend move up or down)
-									// when try move down -> trymove -> get end of car -> check one below ie second [] -> -1 -> if == -1 -> move down
-								// instead of changin x/y to get array 
-									// index 0 - 1  -> 0 - 100    so if eg x 50 -> index 0   100 -200 -> 1   200-300 2   300-400  3  400-500 4... 
-//								int yOrd = y/100 
-	//							int xOrd = 
-		//						if ()
-								if (x > 300) System.out.println("dsada" + " " + y);   
-								selected.setX(x);
-								
-							}
+							else 
+								selected.setX(leftX);
 						}
-						
 						if (selected.orientation().equals("v")) {
 							// prevent going outside grid up
-							if (y < BORDER_OFFSET) 
+							if (leftY < BORDER_OFFSET) 
 								selected.setY(BORDER_OFFSET);
 							// prevent going outside grid down
-							else if (y + selected.getHeight() > GRID_HEIGHT + BORDER_OFFSET)
+							else if (leftY + selected.getHeight() > GRID_HEIGHT + BORDER_OFFSET)
 								selected.setY(GRID_HEIGHT + BORDER_OFFSET - selected.getHeight());
 							else 
-								selected.setY(y);
+								selected.setY(leftY);
 						}
 						repaint();
 					}
@@ -212,25 +215,26 @@ public class GridLockGrid extends JPanel {
 		
 		
 		
-		private class Utilities extends JPanel {
-			private Utilities() {
-				initUtilities();
-			}
-			
-			public void initUtilities() {
-				button1 = new JButton( new AbstractAction("idk") {
-	
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						// TODO Auto-generated method stub
-					}
-					
-				});
-				//button2 = new JButton("hhkj");
-				setLayout(new BorderLayout());
-				add(button1, BorderLayout.EAST);
-				//add(button2, BorderLayout.WEST);
-			}
-		} 
 	}
+	private class Utilities extends JPanel {
+		private Utilities() {
+			initUtilities();
+		}
+		
+		public void initUtilities() {
+			button1 = new JButton( new AbstractAction("idk") {
+				
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					// TODO Auto-generated method stub
+				}
+				
+			});
+			//button2 = new JButton("hhkj");
+			setLayout(new BorderLayout());
+			add(button1, BorderLayout.EAST);
+			//add(button2, BorderLayout.WEST);
+		}
+	} 
+
 }
