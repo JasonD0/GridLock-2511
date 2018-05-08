@@ -2,6 +2,7 @@
 public class InGameObject {
 	private int x;
 	private int y;
+	private int size;
 	private Type type;
 	private Direction direction;
 	
@@ -9,6 +10,14 @@ public class InGameObject {
 		this.x = x;
 		this.y = y;
 		this.type = type;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
 	}
 
 	public int getX() {

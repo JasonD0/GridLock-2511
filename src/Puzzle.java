@@ -17,6 +17,14 @@ public class Puzzle {
 	public void setObjectArray(InGameObject[][] objectArray) {
 		this.objectArray = objectArray;
 	}
+	
+	public int getPuzzleYLen() {
+		return objectArray.length;
+	}
+	
+	public int getPuzzleXLen() {
+		return objectArray.length;
+	}
 
 	public InGameObject getExit() {
 		return exit;
@@ -34,6 +42,28 @@ public class Puzzle {
 		this.redCar = redCar;
 	}
 
+	public void addObjectToPuzzle(InGameObject g) {
+		objectArray[g.getY()][g.getX()] = g; 
+		
+		
+	}
+	
+	public InGameObject getInGameObject(int x ,int y) {
+		return objectArray[y][x];
+	}
+	
+	public boolean checkAvailability(int x, int y) {
+		Type t = objectArray[y][x].getType();
+		if (t.equals(Type.FLOOR) || t.equals(Type.EXIT)) {
+			return true;
+		} else {
+			return false; 
+		}
+	}
+
+	
+ 
+	
 
 	
 	

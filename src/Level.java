@@ -5,7 +5,7 @@ public class Level {
 	
 	
 	
-	public Level(Difficulty difficulty) {
+	public Level() {
 		int axisX = 6; 
 		int axisY = 6;
 		this.current = new Puzzle(axisX,axisY);
@@ -16,21 +16,51 @@ public class Level {
 		int x = 0;
 		int y = 0;
 		
+		for (y = 0; y < this.current.getPuzzleYLen(); y++) {
+			for (x = 0; x < this.current.getPuzzleXLen(); x++) {
+				InGameObject floor = new InGameObject(x,y,Type.FLOOR);
+				current.addObjectToPuzzle(floor);
+			}
+		}
 		
 		
 	}
 	
-	public void addObjectstoLevel() {
+	public void addObjectstoLevel(InGameObject g) {
 		
 	}
 	
-	/**
-	 * Add truck and car into the level
-	 * Before adding floor into the level
-	 */
+	
 	public void generateLevel() {
 		
 	}
+
+	public Puzzle getCurrent() {
+		return current;
+	}
+
+	public void setCurrent(Puzzle current) {
+		this.current = current;
+	}
+	
+	public void printPuzzle() {
+		int x = 0;
+		int y = 0;
+		for(y = 0; y < this.current.getPuzzleYLen(); y++) {
+			for (x = 0; x < this.current.getPuzzleXLen(); x++) {
+				
+				if(current.getInGameObject(x, y).getType().toString().equals("FLOOR")) {
+					System.out.print("_");
+				}
+				
+			}
+			System.out.println();
+		}
+		System.out.println();
+		
+	}
+	
+	
 	
 
 	
