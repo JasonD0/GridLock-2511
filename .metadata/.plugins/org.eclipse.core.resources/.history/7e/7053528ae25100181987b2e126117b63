@@ -1,0 +1,60 @@
+
+public class codeStorage {
+	/*
+	 * import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+
+public class GridLockGrid extends JPanel implements ActionListener{
+	private JPanel grid;
+	private List<Tile> tiles;
+	private final int NUMBER_OF_TILES = 36;
+	
+	public GridLockGrid() {
+		initGrid();
+	}
+	
+	private void initGrid() {
+		grid = new JPanel();
+		grid.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+		grid.setLayout(new GridLayout(6,6,0,0));
+		
+		tiles = new ArrayList<>();
+		
+		this.add(grid, BorderLayout.CENTER);
+		for (int i = 0; i < 6; i++) {
+			for (int j = 0; j < 6; j++) {
+				Tile tile = new Tile();
+				tile.putClientProperty("position", new Point(i, j));
+				tile.setPreferredSize(new Dimension(100, 100));
+				tiles.add(tile);
+			}
+		}
+		
+		for (int i = 0; i < NUMBER_OF_TILES; i++) {
+			Tile tile = tiles.get(i);
+			grid.add(tile);
+			tile.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+		}
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}
+
+	 */
+}

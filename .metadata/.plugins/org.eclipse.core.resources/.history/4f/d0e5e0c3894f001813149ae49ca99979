@@ -1,0 +1,11 @@
+import javax.swing.SwingUtilities;
+
+public class GridLock {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		GridlockFrame gridLock = new GridlockFrame();
+		SwingUtilities.invokeLater(gridLock);
+	}
+
+}

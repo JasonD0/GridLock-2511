@@ -1,0 +1,26 @@
+import java.awt.Dimension;
+import javax.swing.JFrame;
+import java.awt.EventQueue;
+import javax.swing.JFrame;
+
+public class GridlockFrame implements Runnable{
+	private JFrame frame;
+	private static final int FRAME_HEIGHT = 600; 
+	private static final int FRAME_WIDTH = 400;
+	
+	public GridlockFrame() {
+	}
+
+	@Override
+	public void run() {
+		frame = new JFrame("GridLock");
+		//frame.setSize(FRAME_HEIGHT, FRAME_WIDTH);
+		frame.setPreferredSize(new Dimension(FRAME_HEIGHT, FRAME_WIDTH));
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
+		
+		frame.pack();
+		frame.setVisible(true);
+	}
+	
+}

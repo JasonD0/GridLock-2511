@@ -1,0 +1,12 @@
+import javax.swing.JButton;
+
+public class Tile extends JButton{
+	public Tile() {
+		super();
+		initTile();
+	}
+	
+	private void initTile() {
+		
+	}
+}
