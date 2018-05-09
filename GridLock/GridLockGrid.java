@@ -60,7 +60,7 @@ public class GridLockGrid extends JPanel {
 		   	- add cars based on the array given
 		*/ 
 		gridState = new int[][] {
-			{ 1, -1,  4, -1,  1,  1},
+			{ 1,  1, -1, -1, -1, -1},
 			{-1, -1, -1, -1, -1, -1},
 			{-1, -1, -1, -1, -1, -1},
 			{-1, -1, -1, -1, -1, -1},
@@ -76,7 +76,7 @@ public class GridLockGrid extends JPanel {
 //			xTmp = 0;
 			yTmp += 200;
 		}*/
-		cars.add(new Car(xTmp + 400, yTmp, 200, 100, "h", 2));
+		cars.add(new Car(xTmp, yTmp, 200, 100, "h", 2));
 		cars.add(new Car(xTmp, yTmp + 400, 100, 200, "v", 2));
 		
 	}
@@ -139,120 +139,15 @@ public class GridLockGrid extends JPanel {
 						selected.setY(roundNearestHundred(selected.getY()));
 						
 						int row = (selected.getY() - BORDER_OFFSET)/100;	// top edge of car
-						int col = (selected.getX() - BORDER_OFFSET)/100;	// left edge of car  
+						int col = (selected.getX() - BORDER_OFFSET)/100;	// left edge of car
 						
-						tryMove(row, col);
+						if (selected.orientation().equals("h")) horizontalTryMove(row, col);
+						if (selected.orientation().equals("v")) verticalTryMove(row, col);
 						
 						oldX = selected.getX();
 						oldY = selected.getY();
 					}
 					repaint();
-				}
-				
-				// precondition   selected != null
-				public boolean tryMove(int row, int col) {
-					/* TO DO 
-					   - update array when change car position (or do it in mouse released)
-					   - eliminate redundancy/make shorter/break into smaller parts
-					*/
-					
-					// start for v -> top of car
-					// start for h -> left of car
-					int size = selected.getSize();
-					if (selected.orientation().equals("h")) {
-						int oldCol = (roundNearestHundred(oldX) - BORDER_OFFSET)/100; 
-						// try move right 
-						if (oldX < selected.getX()) {
-							int nextFreeSlot = -1;	
-							// handles case where car ignores another car eg  2 2 (curr car)  1  -1 -1    
-							for (int i = oldCol + selected.getSize(); i < col; i++) {
-								if (gridState[row][i] != -1 && gridState[row][i] != 1/*selected.getID*/) {
-									nextFreeSlot = i - selected.getSize();  // nextFreeslot is the start of rect s.t end is before i 
-									break;
-								}
-							}
-							// moves car left until car is in free tiles
-							for (int i = size - 1; i >= 0 /*&& nextFreeSlot == -1*/; i--) {
-								if (gridState[row][col+i] != -1 && gridState[row][col+i] != 1/*selected.getID*/) {
-									col -= 1;		
-									i = size;
-								}
-							}
-							if (nextFreeSlot != -1) 
-								selected.setX(nextFreeSlot*100 + BORDER_OFFSET);
-							else 
-								selected.setX(col*100 + BORDER_OFFSET);
-						}
-						// try move left   
-						else if (oldX > selected.getX()) {
-							int nextFreeSlot = -1;
-							// handles case where car ignores another car eg  -1 -1   1   2 2 (curr car)
-							for (int i = oldCol - 1; i >= col; i--) {
-								if (gridState[row][i] != -1 && gridState[row][i] != 1/*selected.getID*/) {
-									nextFreeSlot = i + 1;  // nextFreeslot is the start of rect s.t end is before i 
-									break;
-								}
-							}
-							// moves car right until car is in free tiles
-							for (int i = size - 1; i >= 0 /*&& nextFreeSlot == -1*/; i--) {
-								if (gridState[row][col+i] != -1 && gridState[row][col+i] != 1 /*selected.getID()*/) {
-									col += 1;		
-									i = size - 1;
-								}
-							}
-							if (nextFreeSlot != -1) 
-								selected.setX(nextFreeSlot*100 + BORDER_OFFSET);
-							else
-								selected.setX(col*100 + BORDER_OFFSET);
-						}
-					} else if (selected.orientation().equals("v")) {
-						int oldRow = (roundNearestHundred(oldY) - BORDER_OFFSET)/100;
-						// try move down
-						if (oldY < selected.getY()) {
-							int nextFreeSlot = -1;	
-							// handles case where car ignores another car eg  2 2 (curr car)  1  -1 -1
-							for (int i = oldRow + selected.getSize(); i < row; i++) {
-								if (gridState[i][col] != -1 && gridState[i][col] != 2/*selected.getID()*/) {
-									nextFreeSlot = i - selected.getSize();  // nextFreeslot is the start of rect s.t end is before i
-									break;
-								}
-							}
-							// moves car up until whole car is in free tiles
-							for (int i = size - 1; i >= 0 /*&& nextFreeSlot == -1*/; i--) {
-								if (gridState[row+i][col] != -1 && gridState[row+i][col] != 2/*selected.getID()*/) {
-									row -= 1;		
-									i = size;	// want i = size - 1   -> but -1 happens end each loop
-								}
-							}
-							if (nextFreeSlot != -1)
-								selected.setY((nextFreeSlot)*100 + BORDER_OFFSET);
-							else
-								selected.setY(row*100 + BORDER_OFFSET);
-						}
-						// try move up 
-						else if (oldY > selected.getY()) {
-							int nextFreeSlot = -1;	
-							// handles case where car ignores another car eg  -1 -1   1   2 2 (curr car)
-							for (int i = oldRow - 1; i > row; i--) {
-								if (gridState[i][col] != -1 && gridState[i][col] != 2/*selected.getID()*/) {
-									nextFreeSlot = i + 1;  // nextFreeslot is the start of rect s.t end is before i 
-									break;
-								}
-							}
-							// moves car down until whole car is in free tiles
-							for (int i = size - 1; i >= 0; i--) {
-								if (gridState[row+i][col] != -1 && gridState[row+i][col] != 2/*selected.getID()*/) {
-									row += 1;		
-									i = size - 1;
-								}
-							}
-							if (nextFreeSlot != -1)
-								selected.setY(nextFreeSlot*100 + BORDER_OFFSET);
-							else
-								selected.setY(row*100 + BORDER_OFFSET);
-						}
-					}
-					return true;
 				}
 				
 				@Override
@@ -342,7 +237,91 @@ public class GridLockGrid extends JPanel {
 			return value;
 		}
 		
+		public void horizontalTryMove(int row, int col) {
+			/* TO DO 
+			   - update array when change car position (or do it in mouse released)
+			*/
+			int size = selected.getSize();
+			int nextFreeSlot = -1;
+			int j = 1, k = -1;
+			
+			int oldCol = (roundNearestHundred(oldX) - BORDER_OFFSET)/100;
+			// try move right 
+			if (oldX < selected.getX()) {
+				// handles case where car ignores another car eg  2 2 (curr car)  1  -1 -1    
+				for (int i = oldCol + size; i < col; i++) {
+					if (gridState[row][i] != -1 && gridState[row][i] != 1/*selected.getID*/) {
+						nextFreeSlot = i - size;  // nextFreeslot is the start of rect s.t end is before i 
+						break;
+					}
+				}
+				j = -1; k = 0;
+				
+			// try move left  
+			} else if (oldX > selected.getX()) {
+				// handles case where car ignores another car eg  -1 -1   1   2 2 (curr car)
+				for (int i = oldCol - 1; i >= col; i--) {
+					if (gridState[row][i] != -1 && gridState[row][i] != 1/*selected.getID*/) {
+						nextFreeSlot = i + 1;  // nextFreeslot is the start of rect s.t end is before i 
+						break;
+					}
+				}
+			}
+			// moves car until car is in free tiles
+			for (int i = size - 1; i >= 0 /*&& nextFreeSlot == -1*/; i--) {
+				if (gridState[row][col+i] != -1 && gridState[row][col+i] != 1 /*selected.getID()*/) {
+					col += j;		
+					i = size + k;
+				}
+			}
+			if (nextFreeSlot != -1) 
+				selected.setX(nextFreeSlot*100 + BORDER_OFFSET);
+			else
+				selected.setX(col*100 + BORDER_OFFSET);
+		}
 		
+		public void verticalTryMove(int row, int col) {
+			/* TO DO 
+			   - update array when change car position (or do it in mouse released)
+			*/
+			int size = selected.getSize();
+			int nextFreeSlot = -1;
+			int j = 1, k = -1;
+			
+			int oldRow = (roundNearestHundred(oldY) - BORDER_OFFSET)/100;
+			// try move down
+			if (oldY < selected.getY()) {
+				// handles case where car ignores another car eg  2 2 (curr car)  1  -1 -1
+				for (int i = oldRow + size; i < row; i++) {
+					if (gridState[i][col] != -1 && gridState[i][col] != 2/*selected.getID()*/) {
+						nextFreeSlot = i - size;  // nextFreeslot is the start of rect s.t end is before i
+						break;
+					}
+				}
+				j = -1; k = 0;
+				
+			// try move up
+			} else if (oldY > selected.getY()) {
+				// handles case where car ignores another car eg  -1 -1   1   2 2 (curr car)
+				for (int i = oldRow - 1; i > row; i--) {
+					if (gridState[i][col] != -1 && gridState[i][col] != 2/*selected.getID()*/) {
+						nextFreeSlot = i + 1;  // nextFreeslot is the start of rect s.t end is before i 
+						break;
+					}
+				}
+			}
+			// moves car until whole car is in free tiles
+			for (int i = size - 1; i >= 0; i--) {
+				if (gridState[row+i][col] != -1 && gridState[row+i][col] != 2/*selected.getID()*/) {
+					row += j;		
+					i = size + k;
+				}
+			}
+			if (nextFreeSlot != -1)
+				selected.setY(nextFreeSlot*100 + BORDER_OFFSET);
+			else
+				selected.setY(row*100 + BORDER_OFFSET);
+		}
 	}
 	
 	// for later if want to add buttons below (?)
