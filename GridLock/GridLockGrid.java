@@ -41,6 +41,8 @@ public class GridLockGrid extends JPanel {
 	private int[][] gridState;
 	private Car selected;
 
+	private int oldX = BORDER_OFFSET;
+	private int oldY = BORDER_OFFSET;
 	int x = 0, y = 0, velX = 0, velY = 0;
 	
 	public GridLockGrid() {
@@ -53,13 +55,17 @@ public class GridLockGrid extends JPanel {
 	private void initGridLock() {	
 		cars = new ArrayList<>();
 		
+		/* TO DO:
+		   	- constructor for gridLockGrid takes in array representing grid state
+		   	- add cars based on the array given
+		*/ 
 		gridState = new int[][] {
-			{ 1,  1, -1, -1, -1, -1},
-			{ 2, -1, -1, -1, -1, -1},
-			{ 2, -1, -1, -1, -1, -1},
+			{ 1, -1,  4, -1,  1,  1},
 			{-1, -1, -1, -1, -1, -1},
 			{-1, -1, -1, -1, -1, -1},
-			{-1, -1, -1, -1, -1, -1}
+			{-1, -1, -1, -1, -1, -1},
+			{ 2, -1, -1, -1, -1, -1},
+			{ 2, -1, -1, -1, -1, -1}
 		};
 		
 		
@@ -70,31 +76,25 @@ public class GridLockGrid extends JPanel {
 //			xTmp = 0;
 			yTmp += 200;
 		}*/
-		cars.add(new Car(xTmp, yTmp, 200, 100, "h", 2));
-		cars.add(new Car(xTmp, yTmp + 100, 100, 200, "v", 2));
+		cars.add(new Car(xTmp + 400, yTmp, 200, 100, "h", 2));
+		cars.add(new Car(xTmp, yTmp + 400, 100, 200, "v", 2));
 		
 	}
 
+	/* TO DO
+	 	- check if red car reached goal i.e. column = 4  (left edge of car of size 2)  
+	*/
 	private class Grid extends JPanel { 		
 		private Grid( ) {
 			setFocusable(true);
 			setFocusTraversalKeysEnabled(false);
 			initGrid();
 		}
-		
-		public int roundNearestHundred(int val) {
-			int value = val;
-			if (value < BORDER_OFFSET) return BORDER_OFFSET;
-			if (value > GRID_LENGTH) return GRID_LENGTH;
-			if (value % 100 < 50)
-				for (; value % 100 != BORDER_OFFSET; value -= 1) {}
-			else if (value % 100 > 50) 
-				for (; value % 100 != BORDER_OFFSET; value += 1) {}
-			return value;
-		}
+	
 		public void initGrid() {
 			setPreferredSize(new Dimension(620, 620));
 			setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
+			
 			MouseAdapter carMouseAdapter = new MouseAdapter() {
 				private Car currSelected;
 				private Point delta;
@@ -107,8 +107,8 @@ public class GridLockGrid extends JPanel {
 						for (Car car : cars) {
 							if (car.contains(e.getPoint())) {
 								selected = car;
-								x = selected.getX();
-								y = selected.getY();
+								oldX = x = selected.getX();
+								oldY = y = selected.getY();
 								delta = new Point(e.getX() - selected.getX(), e.getY() - selected.getY());
 								repaint();
 								break;
@@ -122,6 +122,7 @@ public class GridLockGrid extends JPanel {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					// clicking anything else again deselect
+					//repaint();
 					if (selected != null && selected == currSelected) {
 						selected.setX(roundNearestHundred(selected.getX()));
 						selected.setY(roundNearestHundred(selected.getY()));
@@ -132,16 +133,126 @@ public class GridLockGrid extends JPanel {
 				
 				@Override
 			    public void mouseReleased(MouseEvent e) {
-					System.out.println("dsada");
-					if (selected != null) { 
+					if (selected != null) {
+						// ensures edges of car on edges of tile
 						selected.setX(roundNearestHundred(selected.getX()));
 						selected.setY(roundNearestHundred(selected.getY()));
-						int row = selected.getY() - BORDER_OFFSET;
-						int col = selected.getX() - BORDER_OFFSET;
-						System.out.println(row + " " + col);
 						
+						int row = (selected.getY() - BORDER_OFFSET)/100;	// top edge of car
+						int col = (selected.getX() - BORDER_OFFSET)/100;	// left edge of car  
+						
+						tryMove(row, col);
+						
+						oldX = selected.getX();
+						oldY = selected.getY();
 					}
 					repaint();
+				}
+				
+				// precondition   selected != null
+				public boolean tryMove(int row, int col) {
+					/* TO DO 
+					   - update array when change car position (or do it in mouse released)
+					   - eliminate redundancy/make shorter/break into smaller parts
+					*/
+					
+					// start for v -> top of car
+					// start for h -> left of car
+					int size = selected.getSize();
+					if (selected.orientation().equals("h")) {
+						int oldCol = (roundNearestHundred(oldX) - BORDER_OFFSET)/100; 
+						// try move right 
+						if (oldX < selected.getX()) {
+							int nextFreeSlot = -1;	
+							// handles case where car ignores another car eg  2 2 (curr car)  1  -1 -1    
+							for (int i = oldCol + selected.getSize(); i < col; i++) {
+								if (gridState[row][i] != -1 && gridState[row][i] != 1/*selected.getID*/) {
+									nextFreeSlot = i - selected.getSize();  // nextFreeslot is the start of rect s.t end is before i 
+									break;
+								}
+							}
+							// moves car left until car is in free tiles
+							for (int i = size - 1; i >= 0 /*&& nextFreeSlot == -1*/; i--) {
+								if (gridState[row][col+i] != -1 && gridState[row][col+i] != 1/*selected.getID*/) {
+									col -= 1;		
+									i = size;
+								}
+							}
+							if (nextFreeSlot != -1) 
+								selected.setX(nextFreeSlot*100 + BORDER_OFFSET);
+							else 
+								selected.setX(col*100 + BORDER_OFFSET);
+						}
+						// try move left   
+						else if (oldX > selected.getX()) {
+							int nextFreeSlot = -1;
+							// handles case where car ignores another car eg  -1 -1   1   2 2 (curr car)
+							for (int i = oldCol - 1; i >= col; i--) {
+								if (gridState[row][i] != -1 && gridState[row][i] != 1/*selected.getID*/) {
+									nextFreeSlot = i + 1;  // nextFreeslot is the start of rect s.t end is before i 
+									break;
+								}
+							}
+							// moves car right until car is in free tiles
+							for (int i = size - 1; i >= 0 /*&& nextFreeSlot == -1*/; i--) {
+								if (gridState[row][col+i] != -1 && gridState[row][col+i] != 1 /*selected.getID()*/) {
+									col += 1;		
+									i = size - 1;
+								}
+							}
+							if (nextFreeSlot != -1) 
+								selected.setX(nextFreeSlot*100 + BORDER_OFFSET);
+							else
+								selected.setX(col*100 + BORDER_OFFSET);
+						}
+					} else if (selected.orientation().equals("v")) {
+						int oldRow = (roundNearestHundred(oldY) - BORDER_OFFSET)/100;
+						// try move down
+						if (oldY < selected.getY()) {
+							int nextFreeSlot = -1;	
+							// handles case where car ignores another car eg  2 2 (curr car)  1  -1 -1
+							for (int i = oldRow + selected.getSize(); i < row; i++) {
+								if (gridState[i][col] != -1 && gridState[i][col] != 2/*selected.getID()*/) {
+									nextFreeSlot = i - selected.getSize();  // nextFreeslot is the start of rect s.t end is before i
+									break;
+								}
+							}
+							// moves car up until whole car is in free tiles
+							for (int i = size - 1; i >= 0 /*&& nextFreeSlot == -1*/; i--) {
+								if (gridState[row+i][col] != -1 && gridState[row+i][col] != 2/*selected.getID()*/) {
+									row -= 1;		
+									i = size;	// want i = size - 1   -> but -1 happens end each loop
+								}
+							}
+							if (nextFreeSlot != -1)
+								selected.setY((nextFreeSlot)*100 + BORDER_OFFSET);
+							else
+								selected.setY(row*100 + BORDER_OFFSET);
+						}
+						// try move up 
+						else if (oldY > selected.getY()) {
+							int nextFreeSlot = -1;	
+							// handles case where car ignores another car eg  -1 -1   1   2 2 (curr car)
+							for (int i = oldRow - 1; i > row; i--) {
+								if (gridState[i][col] != -1 && gridState[i][col] != 2/*selected.getID()*/) {
+									nextFreeSlot = i + 1;  // nextFreeslot is the start of rect s.t end is before i 
+									break;
+								}
+							}
+							// moves car down until whole car is in free tiles
+							for (int i = size - 1; i >= 0; i--) {
+								if (gridState[row+i][col] != -1 && gridState[row+i][col] != 2/*selected.getID()*/) {
+									row += 1;		
+									i = size - 1;
+								}
+							}
+							if (nextFreeSlot != -1)
+								selected.setY(nextFreeSlot*100 + BORDER_OFFSET);
+							else
+								selected.setY(row*100 + BORDER_OFFSET);
+						}
+					}
+					return true;
 				}
 				
 				@Override
@@ -150,7 +261,7 @@ public class GridLockGrid extends JPanel {
 					if (selected != null) {
 						int leftX = e.getX() - delta.x;
 						int leftY = e.getY() - delta.y;
-						// delta.y -> value from top to where click,  e.getY -> value from top of panel
+						// delta.y -> value from top to where click,  e.getY -> value from top of panel  similar with x
 						if (selected.orientation().equals("h")) {
 							// prevent going outside grid on left
 							if (leftX < BORDER_OFFSET) 
@@ -180,13 +291,19 @@ public class GridLockGrid extends JPanel {
 		}
 		
 		private void draw(Graphics g) {
+			/* TO DO   
+			 	- exit car is red
+			 	- different colors for different cars (?)
+			*/  
 			Graphics2D g2 = (Graphics2D)g.create();
 			for (Car car : cars) {
 				if (car != selected) {
+					// draw non-selected cars
 					g2.setColor(Color.BLUE);
 					g2.fillRect(car.getX(), car.getY(), car.getLength(), car.getHeight());
+					// draw the border for non-selected cars
+					// white so it seems like there are gaps between cars
 					g2.setColor(Color.WHITE);
-					
 					Stroke oldStroke = g2.getStroke();
 					g2.setStroke(new BasicStroke((float) 4.0));
 					g2.drawRect(car.getX(), car.getY(), car.getLength(), car.getHeight());
@@ -194,10 +311,11 @@ public class GridLockGrid extends JPanel {
 				}
 			}
 			if (selected != null) {
+				// draw selected car
 				g2.setColor(Color.RED);
 				g2.fillRect(selected.getX(), selected.getY(), selected.getLength(), selected.getHeight());
+				// draw the border of selected car
 				g2.setColor(Color.BLACK);
-				
 				Stroke oldStroke = g2.getStroke();
 				g2.setStroke(new BasicStroke((float) 2.0));
 				g2.drawRect(selected.getX(), selected.getY(), selected.getLength(), selected.getHeight());
@@ -212,10 +330,22 @@ public class GridLockGrid extends JPanel {
 			draw(g);
 		}
 
-		
+		// ensures edges of car are on the edges of tiles
+		public int roundNearestHundred(int val) {
+			int value = val;
+			if (value < BORDER_OFFSET) return BORDER_OFFSET;
+			if (value > GRID_LENGTH) return GRID_LENGTH;
+			if (value % 100 < 50)
+				for (; value % 100 != BORDER_OFFSET; value -= 1) {}
+			else if (value % 100 > 50) 
+				for (; value % 100 != BORDER_OFFSET; value += 1) {}
+			return value;
+		}
 		
 		
 	}
+	
+	// for later if want to add buttons below (?)
 	private class Utilities extends JPanel {
 		private Utilities() {
 			initUtilities();
