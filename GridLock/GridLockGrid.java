@@ -17,12 +17,15 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
@@ -30,8 +33,6 @@ import javax.swing.border.EmptyBorder;
 public class GridLockGrid extends JPanel {
 	private final int GRID_HEIGHT = 600;
 	private final int GRID_LENGTH = 600;
-	private final int CAR_HEIGHT = 200;
-	private final int CAR_LENGTH = 100;
 	private final int BORDER_OFFSET = 10;
 	
 	private JButton button1;
@@ -60,12 +61,12 @@ public class GridLockGrid extends JPanel {
 		   	- add cars based on the array given
 		*/ 
 		gridState = new int[][] {
-			{ 1,  1, -1, -1, -1, -1},
-			{-1, -1, -1, -1, -1, -1},
-			{-1, -1, -1, -1, -1, -1},
-			{-1, -1, -1, -1, -1, -1},
-			{ 2, -1, -1, -1, -1, -1},
-			{ 2, -1, -1, -1, -1, -1}
+			{ 1,  1, -1, -1, -1,  8},
+			{ 2, -1, -1,  5, -1,  8},
+			{ 2,  4,  4,  5, -1,  8},
+			{ 2, -1, -1,  5, -1, -1},
+			{ 3, -1, -1, -1,  7,  7},
+			{ 3, -1,  6,  6,  6, -1}
 		};
 		
 		
@@ -76,9 +77,16 @@ public class GridLockGrid extends JPanel {
 //			xTmp = 0;
 			yTmp += 200;
 		}*/
-		cars.add(new Car(xTmp, yTmp, 200, 100, "h", 2));
-		cars.add(new Car(xTmp, yTmp + 400, 100, 200, "v", 2));
-		
+		// test
+		cars.add(new Car(xTmp, yTmp, 200, 100, "h", 2, 1));     
+		cars.add(new Car(xTmp, yTmp + 100, 100, 300, "v", 3, 2));
+		cars.add(new Car(xTmp, yTmp + 400/*arrayindex *100*/, 100, 200, "v", 2, 3));
+		cars.add(new Car(xTmp + 100, yTmp + 200, 200, 100, "h", 2, 4));
+		cars.add(new Car(xTmp + 300, yTmp + 100, 100, 300, "v", 3, 5));
+		cars.add(new Car(xTmp + 200, yTmp + 500, 300, 100, "h", 3, 6));
+		cars.add(new Car(xTmp + 400, yTmp + 400, 200, 100, "h", 2, 7));
+		cars.add(new Car(xTmp + 500, yTmp, 100, 300, "v", 3, 8));
+		//cars.add(new Car(xTmp + 300, yTmp, 300, 100, "h", 3));
 	}
 
 	/* TO DO
@@ -97,7 +105,7 @@ public class GridLockGrid extends JPanel {
 			
 			MouseAdapter carMouseAdapter = new MouseAdapter() {
 				private Car currSelected;
-				private Point delta;
+				private Point distanceFromTopToClick;
 				
 				@Override
 				public void mousePressed(MouseEvent e) {
@@ -109,13 +117,13 @@ public class GridLockGrid extends JPanel {
 								selected = car;
 								oldX = x = selected.getX();
 								oldY = y = selected.getY();
-								delta = new Point(e.getX() - selected.getX(), e.getY() - selected.getY());
+								distanceFromTopToClick = new Point(e.getX() - selected.getX(), e.getY() - selected.getY());
 								repaint();
 								break;
 							}
 						}
 					} else if (selected != null) {
-						delta = new Point(e.getX() - selected.getX(), e.getY() - selected.getY());
+						distanceFromTopToClick = new Point(e.getX() - selected.getX(), e.getY() - selected.getY());
 					}
 				}
 				
@@ -141,22 +149,41 @@ public class GridLockGrid extends JPanel {
 						int row = (selected.getY() - BORDER_OFFSET)/100;	// top edge of car
 						int col = (selected.getX() - BORDER_OFFSET)/100;	// left edge of car
 						
-						if (selected.orientation().equals("h")) horizontalTryMove(row, col);
-						if (selected.orientation().equals("v")) verticalTryMove(row, col);
-						
+						if (selected.orientation().equals("h")) {
+							horizontalTryMove(row, col);
+							horizontalUpdateArray();
+							
+						}
+						if (selected.orientation().equals("v")) {
+							verticalTryMove(row, col);
+							verticalUpdateArray();
+							
+						}
 						oldX = selected.getX();
 						oldY = selected.getY();
 					}
+					printState();
 					repaint();
+					
+					// goal state test 
+					if (selected != null && selected.getId() == 4) {
+						if (selected.getX() == 400 + BORDER_OFFSET) {
+							System.out.println("Level Complete");
+							JOptionPane.showMessageDialog(null, "GZ", "Level Complete", JOptionPane.INFORMATION_MESSAGE);
+							//removeAll();
+							//revalidate();
+							//repaint();
+						}
+					}
 				}
 				
 				@Override
 				// move selected car to new position (e.getX, e.getY)
 				public void mouseDragged(MouseEvent e) {
 					if (selected != null) {
-						int leftX = e.getX() - delta.x;
-						int leftY = e.getY() - delta.y;
-						// delta.y -> value from top to where click,  e.getY -> value from top of panel  similar with x
+						int leftX = e.getX() - distanceFromTopToClick.x;
+						int leftY = e.getY() - distanceFromTopToClick.y;
+						// distanceFromTopToClick.y -> value from top to where click,  e.getY -> value from top of panel  similar with x
 						if (selected.orientation().equals("h")) {
 							// prevent going outside grid on left
 							if (leftX < BORDER_OFFSET) 
@@ -237,7 +264,7 @@ public class GridLockGrid extends JPanel {
 			return value;
 		}
 		
-		public void horizontalTryMove(int row, int col) {
+		private void horizontalTryMove(int row, int col) {
 			/* TO DO 
 			   - update array when change car position (or do it in mouse released)
 			*/
@@ -250,7 +277,7 @@ public class GridLockGrid extends JPanel {
 			if (oldX < selected.getX()) {
 				// handles case where car ignores another car eg  2 2 (curr car)  1  -1 -1    
 				for (int i = oldCol + size; i < col; i++) {
-					if (gridState[row][i] != -1 && gridState[row][i] != 1/*selected.getID*/) {
+					if (gridState[row][i] != -1 && gridState[row][i] != selected.getId()) {
 						nextFreeSlot = i - size;  // nextFreeslot is the start of rect s.t end is before i 
 						break;
 					}
@@ -261,7 +288,7 @@ public class GridLockGrid extends JPanel {
 			} else if (oldX > selected.getX()) {
 				// handles case where car ignores another car eg  -1 -1   1   2 2 (curr car)
 				for (int i = oldCol - 1; i >= col; i--) {
-					if (gridState[row][i] != -1 && gridState[row][i] != 1/*selected.getID*/) {
+					if (gridState[row][i] != -1 && gridState[row][i] != selected.getId()) {
 						nextFreeSlot = i + 1;  // nextFreeslot is the start of rect s.t end is before i 
 						break;
 					}
@@ -269,7 +296,7 @@ public class GridLockGrid extends JPanel {
 			}
 			// moves car until car is in free tiles
 			for (int i = size - 1; i >= 0 /*&& nextFreeSlot == -1*/; i--) {
-				if (gridState[row][col+i] != -1 && gridState[row][col+i] != 1 /*selected.getID()*/) {
+				if (gridState[row][col+i] != -1 && gridState[row][col+i] != selected.getId()) {
 					col += j;		
 					i = size + k;
 				}
@@ -280,7 +307,7 @@ public class GridLockGrid extends JPanel {
 				selected.setX(col*100 + BORDER_OFFSET);
 		}
 		
-		public void verticalTryMove(int row, int col) {
+		private void verticalTryMove(int row, int col) {
 			/* TO DO 
 			   - update array when change car position (or do it in mouse released)
 			*/
@@ -293,7 +320,7 @@ public class GridLockGrid extends JPanel {
 			if (oldY < selected.getY()) {
 				// handles case where car ignores another car eg  2 2 (curr car)  1  -1 -1
 				for (int i = oldRow + size; i < row; i++) {
-					if (gridState[i][col] != -1 && gridState[i][col] != 2/*selected.getID()*/) {
+					if (gridState[i][col] != -1 && gridState[i][col] != selected.getId()) {
 						nextFreeSlot = i - size;  // nextFreeslot is the start of rect s.t end is before i
 						break;
 					}
@@ -304,7 +331,7 @@ public class GridLockGrid extends JPanel {
 			} else if (oldY > selected.getY()) {
 				// handles case where car ignores another car eg  -1 -1   1   2 2 (curr car)
 				for (int i = oldRow - 1; i > row; i--) {
-					if (gridState[i][col] != -1 && gridState[i][col] != 2/*selected.getID()*/) {
+					if (gridState[i][col] != -1 && gridState[i][col] != selected.getId()) {
 						nextFreeSlot = i + 1;  // nextFreeslot is the start of rect s.t end is before i 
 						break;
 					}
@@ -312,7 +339,7 @@ public class GridLockGrid extends JPanel {
 			}
 			// moves car until whole car is in free tiles
 			for (int i = size - 1; i >= 0; i--) {
-				if (gridState[row+i][col] != -1 && gridState[row+i][col] != 2/*selected.getID()*/) {
+				if (gridState[row+i][col] != -1 && gridState[row+i][col] != selected.getId()) {
 					row += j;		
 					i = size + k;
 				}
@@ -321,6 +348,45 @@ public class GridLockGrid extends JPanel {
 				selected.setY(nextFreeSlot*100 + BORDER_OFFSET);
 			else
 				selected.setY(row*100 + BORDER_OFFSET);
+		}
+		
+		private void horizontalUpdateArray() {
+			int col = (selected.getX() - BORDER_OFFSET)/100;
+			int row = (selected.getY() - BORDER_OFFSET)/100;
+			for (int i = 0; i < 6; i++) {
+				if (gridState[row][i] == selected.getId()) {
+					gridState[row][i] = -1;
+				}
+			}
+			for (int i = 0; i < selected.getSize(); i++) {
+				gridState[row][col + i] = selected.getId();
+			}
+		}
+		
+		private void verticalUpdateArray() {
+			int row = (selected.getY() - BORDER_OFFSET)/100;
+			int col = (selected.getX() - BORDER_OFFSET)/100;
+			for (int i = 0; i < 6; i++) {
+				if (gridState[i][col] == selected.getId()) {
+					gridState[i][col] = -1;
+				}
+			}
+			for (int i = 0; i < selected.getSize(); i++) {
+				gridState[row+i][col] = selected.getId();
+			}
+		}
+		
+		public void printState() {
+			for (int i = 0; i < 6; i++) {
+				for (int j = 0; j < 6; j++) {
+					if (gridState[i][j] == -1) 
+						System.out.print(gridState[i][j] + " ");
+					else 
+						System.out.print(" " + gridState[i][j] + " ");
+				}
+				System.out.println();
+			}
+			System.out.println();
 		}
 	}
 	
