@@ -1,26 +1,43 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JFrame;
 
-// DO LIKE TETRIS -> NO GRID(?) 
 
 public class GridLockFrame extends JFrame implements Runnable{
-	private JFrame frame;
-	private static final int FRAME_HEIGHT = 658; 
-	private static final int FRAME_LENGTH = 640;
 	
+	private static final int FRAME_HEIGHT = 900; 
+	private static final int FRAME_LENGTH = 650;
+	private JLabel movesMadeLabel;
+	private Box box;
 	public GridLockFrame() {
 	}
 
 	@Override
 	public void run() {
-		setPreferredSize(new Dimension(FRAME_LENGTH, FRAME_HEIGHT));
 		setTitle("GridLock");
-		GridLockGrid grid = new GridLockGrid();
-		add(grid);
-
+		setLayout(new BorderLayout());
+		box = new Box(BoxLayout.Y_AXIS);
+		newJPanel();
+		//movesMadeLabel = new JLabel("0");
+		//add(box, BorderLayout.CENTER);
+		setPreferredSize(new Dimension(FRAME_LENGTH, FRAME_HEIGHT));
+		//add(movesMadeLabel, BorderLayout.PAGE_START);
+				
+		//add(p, BorderLayout.SOUTH);
 		
 		pack();
 		setVisible(true);
@@ -28,4 +45,38 @@ public class GridLockFrame extends JFrame implements Runnable{
 		setLocationRelativeTo(null) ;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+	
+	public void newJPanel() {
+		GridLockGrid grid = new GridLockGrid(this);
+		grid.setPreferredSize(new Dimension(620, 620));
+		grid.setMaximumSize(new Dimension(620, 620));
+		grid.setMinimumSize(new Dimension(620, 620));
+		box.removeAll();
+		box.add(Box.createVerticalGlue());
+		box.add(grid);
+		//box.add(Box.createVerticalGlue());
+		grid.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
+		JPanel p = new JPanel();		
+		JButton b = new JButton("Reset");
+		p.add(b);
+		box.add(p);
+		b.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				newJPanel();
+				
+			}
+			
+		});
+
+		this.setContentPane(box);
+		//invalidate();
+		//validate();
+	}
+	
+	/*
+	public JLabel getMovesLabel() {
+		return this.movesMadeLabel;
+	}*/
 }

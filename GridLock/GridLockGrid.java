@@ -2,6 +2,7 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -25,15 +26,17 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
 public class GridLockGrid extends JPanel {
 	private final int GRID_HEIGHT = 600;
 	private final int GRID_LENGTH = 600;
-	private final int BORDER_OFFSET = 10;
+	private final int BORDER_OFFSET = 0;
 	
 	private JButton button1;
 	private JButton button2;
@@ -41,14 +44,21 @@ public class GridLockGrid extends JPanel {
 	private List<Car> cars;
 	private int[][] gridState;
 	private Car selected;
-
+	private GridLockFrame frame;
+	private JLabel moves;
+	private int movesMade = 0;
 	private int oldX = BORDER_OFFSET;
 	private int oldY = BORDER_OFFSET;
 	int x = 0, y = 0, velX = 0, velY = 0;
 	
-	public GridLockGrid() {
-		setLayout(new BorderLayout());
-		add(new Grid(), BorderLayout.NORTH);
+	// Note : can pass in frame here -> can use -> reset, new panel (?) etc
+	public GridLockGrid(GridLockFrame frame) {
+		this.frame = frame;
+		//setLayout(new BorderLayout());
+		add(new Grid()/*, BorderLayout.CENTER*/);
+		JPanel header = new JPanel(); // different java file
+		//add(header, BorderLayout.NORTH);
+		//moves = frame.getMovesLabel();
 		//add(new Utilities(), BorderLayout.SOUTH);
 		initGridLock();
 	}
@@ -89,19 +99,17 @@ public class GridLockGrid extends JPanel {
 		//cars.add(new Car(xTmp + 300, yTmp, 300, 100, "h", 3));
 	}
 
-	/* TO DO
-	 	- check if red car reached goal i.e. column = 4  (left edge of car of size 2)  
-	*/
 	private class Grid extends JPanel { 		
 		private Grid( ) {
 			setFocusable(true);
 			setFocusTraversalKeysEnabled(false);
+			setPreferredSize(new Dimension(600, 600));
 			initGrid();
 		}
 	
 		public void initGrid() {
-			setPreferredSize(new Dimension(620, 620));
-			setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
+			//setPreferredSize(new Dimension(590, 590));
+			//setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
 			
 			MouseAdapter carMouseAdapter = new MouseAdapter() {
 				private Car currSelected;
@@ -169,10 +177,18 @@ public class GridLockGrid extends JPanel {
 					if (selected != null && selected.getId() == 4) {
 						if (selected.getX() == 400 + BORDER_OFFSET) {
 							System.out.println("Level Complete");
-							JOptionPane.showMessageDialog(null, "GZ", "Level Complete", JOptionPane.INFORMATION_MESSAGE);
-							//removeAll();
-							//revalidate();
-							//repaint();
+							//Object[] buttonText = ;
+							//JOptionPane.showMessageDialog(null, "GZ", "Level Complete", JOptionPane.PLAIN_MESSAGE);
+
+			                Object[] options = {"prev", "home", "next", "idk", "DS"};	// result returns 0 1 2 etc
+
+			                int result = JOptionPane.showOptionDialog(null, "GZ", "Level Completed", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+			                //System.out.println(result);
+			                if (result == JOptionPane.NO_OPTION) {
+			                	frame.newJPanel();
+			                }
+			                
+			                //frame.newJPanel();
 						}
 					}
 				}
@@ -205,6 +221,8 @@ public class GridLockGrid extends JPanel {
 								selected.setY(leftY);
 						}
 						repaint();
+						//movesMade++;
+						//moves.setText(String.valueOf(movesMade));
 					}
 				}
 			};
@@ -222,25 +240,25 @@ public class GridLockGrid extends JPanel {
 				if (car != selected) {
 					// draw non-selected cars
 					g2.setColor(Color.BLUE);
-					g2.fillRect(car.getX(), car.getY(), car.getLength(), car.getHeight());
+					g2.fillRoundRect(car.getX(), car.getY(), car.getLength(), car.getHeight(), 15, 15);
 					// draw the border for non-selected cars
 					// white so it seems like there are gaps between cars
 					g2.setColor(Color.WHITE);
 					Stroke oldStroke = g2.getStroke();
 					g2.setStroke(new BasicStroke((float) 4.0));
-					g2.drawRect(car.getX(), car.getY(), car.getLength(), car.getHeight());
+					g2.drawRoundRect(car.getX(), car.getY(), car.getLength(), car.getHeight(), 15, 15);
 					g2.setStroke(oldStroke);
 				}
 			}
 			if (selected != null) {
 				// draw selected car
 				g2.setColor(Color.RED);
-				g2.fillRect(selected.getX(), selected.getY(), selected.getLength(), selected.getHeight());
+				g2.fillRoundRect(selected.getX(), selected.getY(), selected.getLength(), selected.getHeight(), 15, 15);
 				// draw the border of selected car
 				g2.setColor(Color.BLACK);
 				Stroke oldStroke = g2.getStroke();
 				g2.setStroke(new BasicStroke((float) 2.0));
-				g2.drawRect(selected.getX(), selected.getY(), selected.getLength(), selected.getHeight());
+				g2.drawRoundRect(selected.getX(), selected.getY(), selected.getLength(), selected.getHeight(), 15, 15);
 				g2.setStroke(oldStroke);
 			}
 			g2.dispose();
@@ -265,9 +283,6 @@ public class GridLockGrid extends JPanel {
 		}
 		
 		private void horizontalTryMove(int row, int col) {
-			/* TO DO 
-			   - update array when change car position (or do it in mouse released)
-			*/
 			int size = selected.getSize();
 			int nextFreeSlot = -1;
 			int j = 1, k = -1;
@@ -308,9 +323,6 @@ public class GridLockGrid extends JPanel {
 		}
 		
 		private void verticalTryMove(int row, int col) {
-			/* TO DO 
-			   - update array when change car position (or do it in mouse released)
-			*/
 			int size = selected.getSize();
 			int nextFreeSlot = -1;
 			int j = 1, k = -1;
@@ -391,6 +403,7 @@ public class GridLockGrid extends JPanel {
 	}
 	
 	// for later if want to add buttons below (?)
+	// different file 
 	private class Utilities extends JPanel {
 		private Utilities() {
 			initUtilities();
