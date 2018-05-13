@@ -19,8 +19,8 @@ public class GridButtonsPanel extends JPanel{
 	private JButton resetButton;
 	
 	public GridButtonsPanel(GridLockFrame frame) {
-		initButtonPanel();
 		this.frame = frame;
+		initButtonPanel();
 	}
 	
 	private void initButtonPanel() {

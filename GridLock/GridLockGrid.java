@@ -33,6 +33,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
@@ -57,6 +58,7 @@ public class GridLockGrid extends JPanel {
 	// Note : can pass in frame here -> can use -> reset, new panel (?) etc
 	public GridLockGrid(GridLockFrame frame) {
 		this.frame = frame;
+		//this.moves = frame.getMovesLabel();
 		initGridLock();
 	}
 	
@@ -64,6 +66,7 @@ public class GridLockGrid extends JPanel {
 		setBackground(Color.GRAY);
 		add(new Grid());
 		cars = new ArrayList<>();
+		movesMade = 0;
 		
 		/* TO DO:
 		   	- constructor for gridLockGrid takes in array representing grid state
@@ -164,6 +167,11 @@ public class GridLockGrid extends JPanel {
 							verticalUpdateArray();
 							
 						}
+						// increment moves made if car moved
+						if (selected.getX() != oldX || selected.getY() != oldY) {
+							movesMade++;
+							frame.setMovesMade(movesMade);
+						}
 						oldX = selected.getX();
 						oldY = selected.getY();
 					}
@@ -176,21 +184,32 @@ public class GridLockGrid extends JPanel {
 							System.out.println("Level Complete");
 
 
-			                JOptionPane pane = new JOptionPane();
-			                pane.setMessage("GZ");
+			                JOptionPane pane = new JOptionPane();	
+			                ImageIcon ribbon = new ImageIcon("ribbon.png");
+			                Image ribbonImage = ribbon.getImage();
+			                ribbonImage = ribbonImage.getScaledInstance(150, 150, Image.SCALE_DEFAULT);
+			                ribbon = new ImageIcon(ribbonImage);
+			                
+			                String text = "<html><body width='" + 200 + "'><h1>Congratulations</h1> <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Number of Moves : " + movesMade + "</p><br /></html>";
+			                JLabel message = new JLabel(text, ribbon, SwingConstants.CENTER);
+			                message.setHorizontalTextPosition(JLabel.RIGHT);
+			                message.setVerticalTextPosition(JLabel.CENTER);
+			                pane.setMessage(message);
 			                pane.setMessageType(JOptionPane.PLAIN_MESSAGE);
 			                
 			                ImageIcon homeIcon = new ImageIcon("home.png");
 							JButton home = setOptionPaneButton(pane, "Home  ", homeIcon, 0);
 							
-							ImageIcon nextIcon = new ImageIcon("next.png");
-							JButton next = setOptionPaneButton(pane, "Next  ", nextIcon, 1);
-							
 							ImageIcon retryIcon = new ImageIcon("retry.png");
-							JButton retry = setOptionPaneButton(pane, "Retry  ", retryIcon, 2);
+							JButton retry = setOptionPaneButton(pane, "Retry  ", retryIcon, 1);
 							
+							ImageIcon nextIcon = new ImageIcon("next.png");
+							JButton next = setOptionPaneButton(pane, "Next  ", nextIcon, 2);
 							
-			                Object[] options = {home};
+							ImageIcon exitIcon = new ImageIcon("exit.png");
+							JButton exit = setOptionPaneButton(pane, "Exit  ", exitIcon, 3);
+							
+			                Object[] options = {home, retry, next, exit};
 			                pane.setOptions(options);
 			                JDialog dialog = pane.createDialog("Level Completed");
 			                dialog.setVisible(true);
@@ -207,12 +226,20 @@ public class GridLockGrid extends JPanel {
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							pane.setValue(option);
+							switch (option) {
+								case 0: /*go menu*/break;
+								case 1: frame.newJPanel(/*initial grid state array*/); break;
+								case 2: /*generate next level (?)*/break;
+								case 3: frame.dispose(); break;
+							}
 						}
 					});
 					Image iconImage = icon.getImage();
-					iconImage = iconImage.getScaledInstance(25, 25, Image.SCALE_DEFAULT);
+					iconImage = iconImage.getScaledInstance(30, 30, Image.SCALE_DEFAULT);
 					button.setIcon(new ImageIcon(iconImage));
-					button.setBackground(Color.LIGHT_GRAY);
+					//button.setBackground(Color.LIGHT_GRAY);
+					//button.setOpaque(false);
+					button.setContentAreaFilled(false);
 					return button;
 				}
 				
