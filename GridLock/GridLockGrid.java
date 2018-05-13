@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
@@ -24,6 +25,8 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -54,16 +57,12 @@ public class GridLockGrid extends JPanel {
 	// Note : can pass in frame here -> can use -> reset, new panel (?) etc
 	public GridLockGrid(GridLockFrame frame) {
 		this.frame = frame;
-		//setLayout(new BorderLayout());
-		add(new Grid()/*, BorderLayout.CENTER*/);
-		JPanel header = new JPanel(); // different java file
-		//add(header, BorderLayout.NORTH);
-		//moves = frame.getMovesLabel();
-		//add(new Utilities(), BorderLayout.SOUTH);
 		initGridLock();
 	}
 	
 	private void initGridLock() {	
+		setBackground(Color.GRAY);
+		add(new Grid());
 		cars = new ArrayList<>();
 		
 		/* TO DO:
@@ -101,16 +100,14 @@ public class GridLockGrid extends JPanel {
 
 	private class Grid extends JPanel { 		
 		private Grid( ) {
-			setFocusable(true);
-			setFocusTraversalKeysEnabled(false);
-			setPreferredSize(new Dimension(600, 600));
 			initGrid();
 		}
 	
 		public void initGrid() {
-			//setPreferredSize(new Dimension(590, 590));
-			//setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
-			
+			setBackground(Color.GRAY);
+			setFocusable(true);
+			setFocusTraversalKeysEnabled(false);
+			setPreferredSize(new Dimension(600, 600));
 			MouseAdapter carMouseAdapter = new MouseAdapter() {
 				private Car currSelected;
 				private Point distanceFromTopToClick;
@@ -177,20 +174,46 @@ public class GridLockGrid extends JPanel {
 					if (selected != null && selected.getId() == 4) {
 						if (selected.getX() == 400 + BORDER_OFFSET) {
 							System.out.println("Level Complete");
-							//Object[] buttonText = ;
-							//JOptionPane.showMessageDialog(null, "GZ", "Level Complete", JOptionPane.PLAIN_MESSAGE);
 
-			                Object[] options = {"prev", "home", "next", "idk", "DS"};	// result returns 0 1 2 etc
 
-			                int result = JOptionPane.showOptionDialog(null, "GZ", "Level Completed", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
-			                //System.out.println(result);
-			                if (result == JOptionPane.NO_OPTION) {
-			                	frame.newJPanel();
-			                }
+			                JOptionPane pane = new JOptionPane();
+			                pane.setMessage("GZ");
+			                pane.setMessageType(JOptionPane.PLAIN_MESSAGE);
 			                
-			                //frame.newJPanel();
+			                ImageIcon homeIcon = new ImageIcon("home.png");
+							JButton home = setOptionPaneButton(pane, "Home  ", homeIcon, 0);
+							
+							ImageIcon nextIcon = new ImageIcon("next.png");
+							JButton next = setOptionPaneButton(pane, "Next  ", nextIcon, 1);
+							
+							ImageIcon retryIcon = new ImageIcon("retry.png");
+							JButton retry = setOptionPaneButton(pane, "Retry  ", retryIcon, 2);
+							
+							
+			                Object[] options = {home};
+			                pane.setOptions(options);
+			                JDialog dialog = pane.createDialog("Level Completed");
+			                dialog.setVisible(true);
+			                
 						}
 					}
+				}
+				
+				private JButton setOptionPaneButton(JOptionPane pane, String text, ImageIcon icon, int option) {
+					JButton button = new JButton(text);
+					button.setFocusable(false);
+					button.setBorderPainted(false);
+					button.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							pane.setValue(option);
+						}
+					});
+					Image iconImage = icon.getImage();
+					iconImage = iconImage.getScaledInstance(25, 25, Image.SCALE_DEFAULT);
+					button.setIcon(new ImageIcon(iconImage));
+					button.setBackground(Color.LIGHT_GRAY);
+					return button;
 				}
 				
 				@Override
@@ -221,8 +244,6 @@ public class GridLockGrid extends JPanel {
 								selected.setY(leftY);
 						}
 						repaint();
-						//movesMade++;
-						//moves.setText(String.valueOf(movesMade));
 					}
 				}
 			};
@@ -239,11 +260,12 @@ public class GridLockGrid extends JPanel {
 			for (Car car : cars) {
 				if (car != selected) {
 					// draw non-selected cars
-					g2.setColor(Color.BLUE);
+					if (car.getId() == 4) g2.setColor(Color.RED);
+					else g2.setColor(Color.LIGHT_GRAY);
 					g2.fillRoundRect(car.getX(), car.getY(), car.getLength(), car.getHeight(), 15, 15);
 					// draw the border for non-selected cars
 					// white so it seems like there are gaps between cars
-					g2.setColor(Color.WHITE);
+					g2.setColor(Color.GRAY);
 					Stroke oldStroke = g2.getStroke();
 					g2.setStroke(new BasicStroke((float) 4.0));
 					g2.drawRoundRect(car.getX(), car.getY(), car.getLength(), car.getHeight(), 15, 15);
@@ -252,12 +274,13 @@ public class GridLockGrid extends JPanel {
 			}
 			if (selected != null) {
 				// draw selected car
-				g2.setColor(Color.RED);
+				if (selected.getId() == 4) g2.setColor(Color.RED); 
+				else g2.setColor(Color.DARK_GRAY);
 				g2.fillRoundRect(selected.getX(), selected.getY(), selected.getLength(), selected.getHeight(), 15, 15);
 				// draw the border of selected car
 				g2.setColor(Color.BLACK);
 				Stroke oldStroke = g2.getStroke();
-				g2.setStroke(new BasicStroke((float) 2.0));
+				g2.setStroke(new BasicStroke((float) 1.0));
 				g2.drawRoundRect(selected.getX(), selected.getY(), selected.getLength(), selected.getHeight(), 15, 15);
 				g2.setStroke(oldStroke);
 			}
@@ -401,28 +424,4 @@ public class GridLockGrid extends JPanel {
 			System.out.println();
 		}
 	}
-	
-	// for later if want to add buttons below (?)
-	// different file 
-	private class Utilities extends JPanel {
-		private Utilities() {
-			initUtilities();
-		}
-		
-		public void initUtilities() {
-			button1 = new JButton( new AbstractAction("idk") {
-				
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					// TODO Auto-generated method stub
-				}
-				
-			});
-			//button2 = new JButton("hhkj");
-			setLayout(new BorderLayout());
-			add(button1, BorderLayout.EAST);
-			//add(button2, BorderLayout.WEST);
-		}
-	} 
-
 }
