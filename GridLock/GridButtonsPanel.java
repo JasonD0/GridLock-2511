@@ -95,7 +95,7 @@ public class GridButtonsPanel extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.newJPanel();	// current puzzle's initial state inserted as param
-				
+				frame.stopTimer();
 			}
 		});
 	}

@@ -49,7 +49,6 @@ public class GridLockGrid extends JPanel {
 	private int[][] gridState;
 	private Car selected;
 	private GridLockFrame frame;
-	private JLabel moves;
 	private int movesMade = 0;
 	private int oldX = BORDER_OFFSET;
 	private int oldY = BORDER_OFFSET;
@@ -181,8 +180,9 @@ public class GridLockGrid extends JPanel {
 					// goal state test 
 					if (selected != null && selected.getId() == 4) {
 						if (selected.getX() == 400 + BORDER_OFFSET) {
+							frame.stopTimer();
+							int time = frame.getTime();
 							System.out.println("Level Complete");
-
 
 			                JOptionPane pane = new JOptionPane();	
 			                ImageIcon ribbon = new ImageIcon("ribbon.png");
@@ -190,7 +190,8 @@ public class GridLockGrid extends JPanel {
 			                ribbonImage = ribbonImage.getScaledInstance(150, 150, Image.SCALE_DEFAULT);
 			                ribbon = new ImageIcon(ribbonImage);
 			                
-			                String text = "<html><body width='" + 200 + "'><h1>Congratulations</h1> <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Number of Moves : " + movesMade + "</p><br /></html>";
+			                String second = (time == 1) ? " second" : " seconds"; 
+			                String text = "<html><body width='" + 200 + "'><h1>Congratulations</h1> <p>Number of Moves : " + movesMade + "</p><br />" + "<p>Time : " + time + second + "</p></html>";
 			                JLabel message = new JLabel(text, ribbon, SwingConstants.CENTER);
 			                message.setHorizontalTextPosition(JLabel.RIGHT);
 			                message.setVerticalTextPosition(JLabel.CENTER);
@@ -246,6 +247,7 @@ public class GridLockGrid extends JPanel {
 				@Override
 				// move selected car to new position (e.getX, e.getY)
 				public void mouseDragged(MouseEvent e) {
+					frame.startTimer();
 					if (selected != null) {
 						int leftX = e.getX() - distanceFromTopToClick.x;
 						int leftY = e.getY() - distanceFromTopToClick.y;
