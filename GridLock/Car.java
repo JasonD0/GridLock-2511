@@ -4,14 +4,20 @@ public class Car {
 	private int x, y;
 	private int height, length, size;
 	private String orientation;
+	private int id;
 	
-	public Car(int x, int y, int length, int height, String orientation, int size) {
+	public Car(int x, int y, int length, int height, String orientation, int size, int id) {
 		this.x = x;
 		this.y = y;
 		this.height = height;
 		this.length = length;
 		this.orientation = orientation;
 		this.size = size;
+		this.id = id;
+	}
+	
+	public int getId() {
+		return this.id;
 	}
 	
 	public void setX(int x) { 
