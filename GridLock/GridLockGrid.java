@@ -5,8 +5,11 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
@@ -25,11 +28,13 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -61,9 +66,40 @@ public class GridLockGrid extends JPanel {
 		initGridLock();
 	}
 	
-	private void initGridLock() {	
-		setBackground(Color.GRAY);
-		add(new Grid());
+	private void initGridLock() {
+		setBackground(Color.BLACK);
+	/*	JPanel idk = new JPanel();
+		idk.setBackground(Color.BLACK);
+		idk.setPreferredSize(new Dimension(600, 600));
+		idk.setLayout(new GridLayout(6,6,15,15));
+		for (int i = 0; i < 6; i++) {
+			for (int j = 0; j < 6; j++) {
+				JButton tile = new JButton();
+				tile.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
+				//tile.setOpaque(true);
+				tile.setBackground(Color.BLACK);
+				idk.add(tile);
+			}
+		}
+		add(idk);*/
+		ImageIcon background = new ImageIcon("grid1.png");
+		//JLayeredPane layer = new JLayeredPane();
+		//layer.setPreferredSize(new Dimension(600,600));
+		//layer.setLayout(new GridBagLayout());
+		JLabel pane = new JLabel(background);
+		pane.setLayout(new GridBagLayout());
+		GridBagConstraints gb = new GridBagConstraints();
+		//gb.insets = new Insets(0,0,0,0);
+		//gb.weightx = 1.0;
+		gb.anchor = GridBagConstraints.CENTER;
+		//gb.gridwidth = GridBagConstraints.REMAINDER;
+		pane.add(new Grid());
+		//gb.weighty = 1.0;
+		//pane.add(Box.createGlue(), gb);
+		//pane.setIcon(background);
+		add(pane);
+		//setLayout(null);
+		//add(new Grid());
 		cars = new ArrayList<>();
 		movesMade = 0;
 		
@@ -106,10 +142,11 @@ public class GridLockGrid extends JPanel {
 		}
 	
 		public void initGrid() {
-			setBackground(Color.GRAY);
+			//setBackground(Color.GRAY);
+			setOpaque(false);
 			setFocusable(true);
 			setFocusTraversalKeysEnabled(false);
-			setPreferredSize(new Dimension(600, 600));
+			setPreferredSize(new Dimension(GRID_LENGTH, GRID_HEIGHT));
 			MouseAdapter carMouseAdapter = new MouseAdapter() {
 				private Car currSelected;
 				private Point distanceFromTopToClick;
@@ -252,7 +289,7 @@ public class GridLockGrid extends JPanel {
 						int leftX = e.getX() - distanceFromTopToClick.x;
 						int leftY = e.getY() - distanceFromTopToClick.y;
 						// distanceFromTopToClick.y -> value from top to where click,  e.getY -> value from top of panel  similar with x
-						if (selected.orientation().equals("h")) {
+						if (selected.orientation().equals("h") && selected.contains(e.getPoint())) {
 							// prevent going outside grid on left
 							if (leftX < BORDER_OFFSET) 
 								selected.setX(BORDER_OFFSET);
@@ -262,7 +299,7 @@ public class GridLockGrid extends JPanel {
 							else 
 								selected.setX(leftX);
 						}
-						if (selected.orientation().equals("v")) {
+						if (selected.orientation().equals("v") && selected.contains(e.getPoint())) {
 							// prevent going outside grid up
 							if (leftY < BORDER_OFFSET) 
 								selected.setY(BORDER_OFFSET);
@@ -282,8 +319,8 @@ public class GridLockGrid extends JPanel {
 		
 		private void draw(Graphics g) {
 			/* TO DO   
-			 	- exit car is red
 			 	- different colors for different cars (?)
+			 	- images instead of rectangle (?)
 			*/  
 			Graphics2D g2 = (Graphics2D)g.create();
 			for (Car car : cars) {
@@ -294,7 +331,7 @@ public class GridLockGrid extends JPanel {
 					g2.fillRoundRect(car.getX(), car.getY(), car.getLength(), car.getHeight(), 15, 15);
 					// draw the border for non-selected cars
 					// white so it seems like there are gaps between cars
-					g2.setColor(Color.GRAY);
+					g2.setColor(/*new Color(238, 238, 238)*/ new Color(10,10,10));
 					Stroke oldStroke = g2.getStroke();
 					g2.setStroke(new BasicStroke((float) 4.0));
 					g2.drawRoundRect(car.getX(), car.getY(), car.getLength(), car.getHeight(), 15, 15);
@@ -309,7 +346,7 @@ public class GridLockGrid extends JPanel {
 				// draw the border of selected car
 				g2.setColor(Color.BLACK);
 				Stroke oldStroke = g2.getStroke();
-				g2.setStroke(new BasicStroke((float) 1.0));
+				g2.setStroke(new BasicStroke((float) 2.0));
 				g2.drawRoundRect(selected.getX(), selected.getY(), selected.getLength(), selected.getHeight(), 15, 15);
 				g2.setStroke(oldStroke);
 			}
