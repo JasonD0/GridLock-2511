@@ -22,18 +22,27 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class GridLockGrid extends JPanel {
-	private final int GRID_HEIGHT = 600;
-	private final int GRID_LENGTH = 600;
+	private final int GRID_HEIGHT = 601;
+	private final int GRID_LENGTH = 601;
 	private final int BORDER_OFFSET = 0;
 	private ArrayList<Car> carList;
+	private ArrayList<String> colors;
+	private Map<Integer, String> carColor;
 	private Car selected;
 	private Puzzle current;
 	private GridLockFrame frame;
 	private int movesMade = 0;
 	private int oldX = BORDER_OFFSET;
 	private int oldY = BORDER_OFFSET;
+	private int index = 0;
 	int x = 0, y = 0, velX = 0, velY = 0;
 	
 	public GridLockGrid(Puzzle initial, GridLockFrame frame) {
@@ -50,9 +59,21 @@ public class GridLockGrid extends JPanel {
 		gb.anchor = GridBagConstraints.CENTER;
 		pane.add(new Grid());
 		add(pane);
-		
+		setCarColors();
 		initial.initGridState();
 		carList = initial.getCarList();
+	}
+	
+	// give each car a color
+	private void setCarColors() {
+		carColor = new HashMap<>();
+		colors = new ArrayList<>(Arrays.asList("black", "blue", "dark_blue", "dark_orange", "dark_pink", "dark_yellow", "emerald", "green", "light_blue", "orange", "pink", "purple", "yellow"));
+		Collections.shuffle(colors);
+		Iterator<String> itr = colors.iterator();
+		for (int i = 0; itr.hasNext(); i++) {
+			carColor.put(i, itr.next());
+			itr.remove();
+		}
 	}
 	
 	private class Grid extends JPanel { 		
@@ -179,35 +200,38 @@ public class GridLockGrid extends JPanel {
 		 * @param g
 		 */
 		private void draw(Graphics g) {
-			/* TO DO   
-			 	- different colors for different cars (?)
-			 	- images instead of rectangle (?)
-			*/  
 			Graphics2D g2 = (Graphics2D)g.create();
 			for (Car car : carList) {
+				// draw non-selected cars
 				if (car != selected) {
-					// draw non-selected cars
-					if (car.getId() == 4) g2.setColor(Color.RED);
-					else g2.setColor(Color.LIGHT_GRAY);
-					g2.fillRoundRect(car.getX(), car.getY(), car.getLength(), car.getHeight(), 15, 15);
+					if (car.isRed() == true && !carColor.get(car.getId()).equals("red"))  carColor.put(car.getId(), "red");
+					String carImagePath = "/cars/" + carColor.get(car.getId());
+					if (car.getSize() == 3) carImagePath += "_truck_" + car.orientation() + ".png";
+					else if (car.getSize() == 2) carImagePath += "_car_" + car.orientation() + ".png";
+					Image carImage = new ImageIcon(getClass().getResource(carImagePath)).getImage();
+					g2.drawImage(carImage, car.getX(), car.getY(), null);
+					
 					// draw the border for non-selected cars
-					// white so it seems like there are gaps between cars
-					g2.setColor(/*new Color(238, 238, 238)*/ new Color(10,10,10));
+					g2.setColor(/*new Color(238, 238, 238)*/ new Color(255,255,255));
 					Stroke oldStroke = g2.getStroke();
-					g2.setStroke(new BasicStroke((float) 4.0));
+					g2.setStroke(new BasicStroke((float) 1.0));
 					g2.drawRoundRect(car.getX(), car.getY(), car.getLength(), car.getHeight(), 15, 15);
 					g2.setStroke(oldStroke);
 				}
 			}
+			
 			if (selected != null) {
 				// draw selected car
-				if (selected.getId() == 4) g2.setColor(Color.RED); 
-				else g2.setColor(Color.DARK_GRAY);
-				g2.fillRoundRect(selected.getX(), selected.getY(), selected.getLength(), selected.getHeight(), 15, 15);
+				String carImagePath = "/cars/" + carColor.get(selected.getId());
+				if (selected.getSize() == 3) carImagePath += "_truck_" + selected.orientation() + ".png";
+				else if (selected.getSize() == 2) carImagePath += "_car_" + selected.orientation() + ".png";
+				Image carImage = new ImageIcon(getClass().getResource(carImagePath)).getImage();
+				g2.drawImage(carImage, selected.getX(), selected.getY(), null);
+				
 				// draw the border of selected car
-				g2.setColor(Color.BLACK);
+				g2.setColor(Color.WHITE);
 				Stroke oldStroke = g2.getStroke();
-				g2.setStroke(new BasicStroke((float) 2.0));
+				g2.setStroke(new BasicStroke((float) 3.0));
 				g2.drawRoundRect(selected.getX(), selected.getY(), selected.getLength(), selected.getHeight(), 15, 15);
 				g2.setStroke(oldStroke);
 			}
