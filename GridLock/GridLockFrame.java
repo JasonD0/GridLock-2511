@@ -28,14 +28,6 @@ public class GridLockFrame extends JFrame implements Runnable{
 		this.g = g;
 	}
 	
-	/**
-	 * Sets new game 
-	 * @param g
-	 */
-	public void setGame(Game g) {	// set new game each time new puzzle chosen 
-		this.g = g;
-	}
-	
 /*	public Puzzle getPuzzle() {	
 		return this.g.getLevel().getInit();
 	}*/
@@ -82,6 +74,21 @@ public class GridLockFrame extends JFrame implements Runnable{
 	}
 	
 	/**
+	 * Changes current frame to show levels/diffculty choosing page
+	 */
+	public void levelPage() {
+		box.removeAll();
+		setPreferredSize(new Dimension(MENU_LENGTH, MENU_HEIGHT));
+		setMaximumSize(new Dimension(MENU_LENGTH, MENU_HEIGHT));
+		setMinimumSize(new Dimension(MENU_LENGTH, MENU_HEIGHT));
+		setSize(new Dimension(MENU_LENGTH, MENU_HEIGHT));
+		LevelManager levels = new LevelManager(this);
+		box.add(levels);
+		setLocationRelativeTo(null);
+		this.setContentPane(box);
+	}
+	
+	/**
 	 * Changes current frame to show instructions
 	 */
 	public void helpPage() {
@@ -101,7 +108,7 @@ public class GridLockFrame extends JFrame implements Runnable{
 	/**
 	 * Changes current frame to show the puzzle
 	 */
-	public void newPuzzlePanel() {
+	public void newPuzzlePanel() {	// (?) takes in string  reset/easy/intermediate/hard    gets level 
 		setPreferredSize(new Dimension(FRAME_LENGTH, FRAME_HEIGHT));
 		setMaximumSize(new Dimension(FRAME_LENGTH, FRAME_HEIGHT));
 		setMinimumSize(new Dimension(FRAME_LENGTH, FRAME_HEIGHT));

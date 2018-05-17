@@ -20,14 +20,14 @@ public class Help extends JPanel {
 
         add(Box.createVerticalStrut(160));
         Return.setPreferredSize(new Dimension(100, 20));
-        ImageIcon startIcon = new ImageIcon(Menu.class.getResource("button_return.png"));
+        ImageIcon startIcon = new ImageIcon(Menu.class.getResource("button_exit.png"/*return*/));
         Return.setIcon(startIcon);
         Return.setBounds(275,500, 108,43);
 
         Return.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //LINK TO MAIN MENU
+                game.mainMenu();
             }
         });
         add(Return, BorderLayout.SOUTH);
@@ -44,7 +44,7 @@ public class Help extends JPanel {
         helpText.setOpaque(false);
         helpText.setBorder(BorderFactory.createEmptyBorder());
         helpText.setBackground(new Color(0,0,0,0));
-        helpText.setLocation(80,80);
+        helpText.setLocation(105,80);
         add(helpText);
         setOpaque(false);
     }
@@ -53,6 +53,6 @@ public class Help extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(new ImageIcon(Menu.class.getResource("helpBackground.png")).getImage(), 0, 0, 640, 658, this);
+        g.drawImage(new ImageIcon(Menu.class.getResource("helpBackground.png")).getImage(), 0, 0, 680, 658, this);
     }
 }

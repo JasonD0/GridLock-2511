@@ -32,11 +32,7 @@ public class Menu extends JPanel {
 		start.addActionListener(new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				game.newPuzzlePanel();
-				/*
-				 * goes to difficulty choosing page
-				 * buttons in difficulty choosing page calls game.newJPanel() -> start game
-				 */
+				game.levelPage();
 			}
 		});
 		box.add(start);
