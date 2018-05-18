@@ -48,11 +48,11 @@ public class GridLockGrid extends JPanel {
 	public GridLockGrid(Puzzle initial, GridLockFrame frame) {
 		this.frame = frame;
 		this.current = initial;
-		setBackground(Color.BLACK);
+		setBackground(new Color(51,51,51));
 		movesMade = 0;
 	
 		// add grid background
-		ImageIcon background = new ImageIcon("grid1.png");
+		ImageIcon background = new ImageIcon(getClass().getResource("grid3.png"));
 		JLabel pane = new JLabel(background);
 		pane.setLayout(new GridBagLayout());
 		GridBagConstraints gb = new GridBagConstraints();
@@ -210,13 +210,13 @@ public class GridLockGrid extends JPanel {
 					else if (car.getSize() == 2) carImagePath += "_car_" + car.orientation() + ".png";
 					Image carImage = new ImageIcon(getClass().getResource(carImagePath)).getImage();
 					g2.drawImage(carImage, car.getX(), car.getY(), null);
-					
 					// draw the border for non-selected cars
-					g2.setColor(/*new Color(238, 238, 238)*/ new Color(255,255,255));
+					/*
+					g2.setColor(new Color(255,255,255));
 					Stroke oldStroke = g2.getStroke();
 					g2.setStroke(new BasicStroke((float) 1.0));
 					g2.drawRoundRect(car.getX(), car.getY(), car.getLength(), car.getHeight(), 15, 15);
-					g2.setStroke(oldStroke);
+					g2.setStroke(oldStroke);*/
 				}
 			}
 			
@@ -229,11 +229,11 @@ public class GridLockGrid extends JPanel {
 				g2.drawImage(carImage, selected.getX(), selected.getY(), null);
 				
 				// draw the border of selected car
-				g2.setColor(Color.WHITE);
+			/*	g2.setColor(Color.WHITE);
 				Stroke oldStroke = g2.getStroke();
 				g2.setStroke(new BasicStroke((float) 3.0));
-				g2.drawRoundRect(selected.getX(), selected.getY(), selected.getLength(), selected.getHeight(), 15, 15);
-				g2.setStroke(oldStroke);
+				//g2.drawRoundRect(selected.getX(), selected.getY(), selected.getLength(), selected.getHeight(), 15, 15);
+				g2.setStroke(oldStroke);*/
 			}
 			g2.dispose();
 		}
@@ -268,78 +268,10 @@ public class GridLockGrid extends JPanel {
 			if (selected != null && selected.isRed() == true) {
 				if (selected.getX() == 400 + BORDER_OFFSET) {
 					frame.stopTimer();
-					int time = frame.getTime();
 					System.out.println("Level Complete");
-
-					// Create level completion panel 
-	                JOptionPane pane = new JOptionPane();	
-	                ImageIcon ribbon = new ImageIcon("ribbon.png");
-	                Image ribbonImage = ribbon.getImage();
-	                ribbonImage = ribbonImage.getScaledInstance(150, 150, Image.SCALE_DEFAULT);
-	                ribbon = new ImageIcon(ribbonImage);
-	                
-	                // Create level completion message
-	                String second = (time == 1) ? " second" : " seconds"; 
-	                String text = "<html><body width='" + 200 + "'><h1>Congratulations</h1> <p>Number of Moves : " + movesMade + "</p><br />" + "<p>Time : " + time + second + "</p></html>";
-	                JLabel message = new JLabel(text, ribbon, SwingConstants.CENTER);
-	                message.setHorizontalTextPosition(JLabel.RIGHT);
-	                message.setVerticalTextPosition(JLabel.CENTER);
-	                pane.setMessage(message);
-	                pane.setMessageType(JOptionPane.PLAIN_MESSAGE);
-	                
-	                // Create home, retry, next puzzle, exit buttons
-	                ImageIcon homeIcon = new ImageIcon("home.png");
-					JButton home = setOptionPaneButton(pane, "Home  ", homeIcon, 0);
-					
-					ImageIcon retryIcon = new ImageIcon("retry.png");
-					JButton retry = setOptionPaneButton(pane, "Retry  ", retryIcon, 1);
-					
-					ImageIcon nextIcon = new ImageIcon("next.png");
-					JButton next = setOptionPaneButton(pane, "Next  ", nextIcon, 2);
-					
-					ImageIcon exitIcon = new ImageIcon("exit.png");
-					JButton exit = setOptionPaneButton(pane, "Exit  ", exitIcon, 3);
-					
-	                Object[] options = {home, retry, next, exit};
-	                pane.setOptions(options);
-	                JDialog dialog = pane.createDialog("Level Completed");
-	                dialog.setVisible(true);
-	                
+					new Message(frame, movesMade, frame.getTime());
 				}
 			}
-		}
-		
-		/**
-		 * Create level completion panel buttons
-		 * @param pane
-		 * @param text
-		 * @param icon
-		 * @param option
-		 * @return
-		 */
-		private JButton setOptionPaneButton(JOptionPane pane, String text, ImageIcon icon, int option) {
-			JButton button = new JButton(text);
-			button.setFocusable(false);
-			button.setBorderPainted(false);
-			button.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					pane.setValue(option);
-					switch (option) {
-						case 0: frame.mainMenu(); break;
-						case 1: frame.newPuzzlePanel(); break;
-						case 2: /*generate next level (?)*/break;
-						case 3: frame.dispose(); break;
-					}
-				}
-			});
-			Image iconImage = icon.getImage();
-			iconImage = iconImage.getScaledInstance(30, 30, Image.SCALE_DEFAULT);
-			button.setIcon(new ImageIcon(iconImage));
-			//button.setBackground(Color.LIGHT_GRAY);
-			//button.setOpaque(false);
-			button.setContentAreaFilled(false);
-			return button;
 		}
 		
 		/**

@@ -14,7 +14,7 @@ import javax.swing.Timer;
 
 public class GridLockFrame extends JFrame implements Runnable{
 	
-	private static final int FRAME_HEIGHT = 875; 
+	private static final int FRAME_HEIGHT = 820; 
 	private static final int FRAME_LENGTH = 700;
 	private static final int MENU_HEIGHT = 697;
 	private static final int MENU_LENGTH = 696;
@@ -46,7 +46,7 @@ public class GridLockFrame extends JFrame implements Runnable{
 	@Override
 	public void run() {
 		setTitle("GridLock");
-		setBackground(Color.DARK_GRAY);
+		setBackground(new Color(51,51,51));
 		box = new Box(BoxLayout.Y_AXIS);
 	
 		mainMenu();
@@ -115,16 +115,15 @@ public class GridLockFrame extends JFrame implements Runnable{
 		setSize(new Dimension(FRAME_LENGTH, FRAME_HEIGHT));
 		
 		Box head = new Box(BoxLayout.X_AXIS);
-		head.add(Box.createVerticalGlue());
-		head.add(initMovesPanel());
-		head.add(Box.createRigidArea(new Dimension(200,0))); // add gap
-		head.add(initTimePanel());
+		head.add(initMovesLabel());
+		head.add(Box.createRigidArea(new Dimension(200,70))); // add gap
+		head.add(initTimeLabel());
 		
 		GridLockGrid grid = new GridLockGrid(getInitialState(), this);
 		grid.setPreferredSize(new Dimension(638, 642));
 		grid.setMaximumSize(new Dimension(638, 642));
 		grid.setMinimumSize(new Dimension(638, 642));
-		grid.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+		//grid.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		
 		box.removeAll();
 		box.add(head);
@@ -139,44 +138,34 @@ public class GridLockFrame extends JFrame implements Runnable{
 	 * Creates timer for the current puzzle
 	 * @return    time JPanel
 	 */
-	private JPanel initTimePanel() {
+	private JLabel initTimeLabel() {
 		if (time != null) time.stop();
 		counter = 0;
-		JPanel timePanel = new JPanel();
-		timePanel.setMaximumSize(new Dimension(130, 75));
-		timePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
-		timePanel.setBackground(Color.GRAY);
-		String timer = "<html> Time <br/>" + counter + "</html>";
+		String timer = "Time  " + counter;
 		JLabel timeLabel = new JLabel(timer);
 		timeLabel.setFont(new Font("Britannic Bold", Font.BOLD, 25));
 		time = new Timer(1000, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				counter++;
-				String timer = "<html> Time <br/>" + counter + "</html>";
+				String timer = "Time  " + counter;
 				timeLabel.setText(timer);
 			}
 		});
-		//time.start();
-		timePanel.add(timeLabel);
-		return timePanel;
+		timeLabel.setForeground(new Color(255,153,0));
+		return timeLabel;
 	}
 	
 	/**
 	 * Creates JPanel to indicate number of moves made for the current puzzle
 	 * @return    moves JPanel
 	 */
-	private JPanel initMovesPanel() {
-		JPanel movesMade = new JPanel();
-		movesMade.setMaximumSize(new Dimension(130, 75));
-		movesMade.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
-		movesMade.setBackground(Color.GRAY);
-		String move = "<html> Moves <br/> 0</html>";
+	private JLabel initMovesLabel() {
+		String move = "Moves  0";
 		movesMadeLabel = new JLabel(move);
 		movesMadeLabel.setFont(new Font("Britannic Bold", Font.BOLD, 25));
-		movesMadeLabel.setForeground(Color.BLACK);
-		movesMade.add(movesMadeLabel);
-		return movesMade;
+		movesMadeLabel.setForeground(new Color(255,153,0));
+		return movesMadeLabel;
 	}
 	
 	/**
@@ -184,7 +173,7 @@ public class GridLockFrame extends JFrame implements Runnable{
 	 * @param movesMade
 	 */
 	public void setMovesMade(int movesMade) {
-		String move = "<html> Moves <br/>" + String.valueOf(movesMade) + "</html>";
+		String move = "Moves  " + String.valueOf(movesMade);
 		this.movesMadeLabel.setText(move);
 	}
 	

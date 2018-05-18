@@ -1,6 +1,7 @@
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -24,8 +25,9 @@ public class Menu extends JPanel {
 		
 		start.setAlignmentX(CENTER_ALIGNMENT);
 		start.setBorderPainted(false);
+		//start.setMargin(new Insets(-2,-2,-3,-2));
 		start.setFocusable(false);
-		Image menuIcon = new ImageIcon("button_play (1).png").getImage();
+		Image menuIcon = new ImageIcon(getClass().getResource("button_play (1).png")).getImage();
 		menuIcon = menuIcon.getScaledInstance(110, 61, Image.SCALE_DEFAULT);
 		start.setIcon(new ImageIcon(menuIcon));
 		start.setContentAreaFilled(false);
@@ -42,7 +44,7 @@ public class Menu extends JPanel {
 		help.setAlignmentX(CENTER_ALIGNMENT);
 		help.setBorderPainted(false);
 		help.setFocusable(false);
-		Image helpIcon = new ImageIcon("button_help.png").getImage();
+		Image helpIcon = new ImageIcon(getClass().getResource("button_help.png")).getImage();
 		helpIcon = helpIcon.getScaledInstance(110, 60, Image.SCALE_DEFAULT);
 		help.setIcon(new ImageIcon(helpIcon));
 		help.setContentAreaFilled(false);
@@ -59,7 +61,7 @@ public class Menu extends JPanel {
 		quit.setAlignmentX(CENTER_ALIGNMENT);
 		quit.setBorderPainted(false);
 		quit.setFocusable(false);
-		Image quitIcon = new ImageIcon("button_exit.png").getImage();
+		Image quitIcon = new ImageIcon(getClass().getResource("button_exit.png")).getImage();
 		quitIcon = quitIcon.getScaledInstance(110, 60, Image.SCALE_DEFAULT);
 		quit.setIcon(new ImageIcon(quitIcon));
 		quit.setContentAreaFilled(false);
