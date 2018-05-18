@@ -1,112 +1,93 @@
 import java.awt.BasicStroke;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Robot;
-import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.Timer;
-import javax.swing.border.EmptyBorder;
+import javax.swing.SwingConstants;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class GridLockGrid extends JPanel {
-	private final int GRID_HEIGHT = 600;
-	private final int GRID_LENGTH = 600;
+	private final int GRID_HEIGHT = 601;
+	private final int GRID_LENGTH = 601;
 	private final int BORDER_OFFSET = 0;
-	
-	private JButton button1;
-	private JButton button2;
-	
 	private ArrayList<Car> carList;
-	//private int[][] gridState;
-	private Puzzle initial;
-	private Puzzle current;
+	private ArrayList<String> colors;
+	private Map<Integer, String> carColor;
 	private Car selected;
+	private Puzzle current;
 	private GridLockFrame frame;
-	private JLabel moves;
 	private int movesMade = 0;
 	private int oldX = BORDER_OFFSET;
 	private int oldY = BORDER_OFFSET;
+	private int index = 0;
 	int x = 0, y = 0, velX = 0, velY = 0;
 	
-	// Note : can pass in frame here -> can use -> reset, new panel (?) etc
 	public GridLockGrid(Puzzle initial, GridLockFrame frame) {
-		this.initial = initial;
-		this.current = initial;
 		this.frame = frame;
-		//setLayout(new BorderLayout());
-		add(new Grid()/*, BorderLayout.CENTER*/);
-		JPanel header = new JPanel(); // different java file
-		//add(header, BorderLayout.NORTH);
-		//moves = frame.getMovesLabel();
-		//add(new Utilities(), BorderLayout.SOUTH);
+		this.current = initial;
+		setBackground(new Color(51,51,51));
+		movesMade = 0;
+	
+		// add grid background
+		ImageIcon background = new ImageIcon(getClass().getResource("grid3.png"));
+		JLabel pane = new JLabel(background);
+		pane.setLayout(new GridBagLayout());
+		GridBagConstraints gb = new GridBagConstraints();
+		gb.anchor = GridBagConstraints.CENTER;
+		pane.add(new Grid());
+		add(pane);
+		setCarColors();
 		initial.initGridState();
 		carList = initial.getCarList();
 	}
 	
-/*	private void initGridLock() {	
-		cars = new ArrayList<>();
-
-		gridState = new int[][] {
-			{ 1,  1, -1, -1, -1,  8},
-			{ 2, -1, -1,  5, -1,  8},
-			{ 2,  4,  4,  5, -1,  8},
-			{ 2, -1, -1,  5, -1, -1},
-			{ 3, -1, -1, -1,  7,  7},
-			{ 3, -1,  6,  6,  6, -1}
-		};
-		
-		
-		int xTmp = BORDER_OFFSET, yTmp = BORDER_OFFSET;
-		
-		// test
-		cars.add(new Car(xTmp, yTmp, 200, 100, "h", 2, 1));     
-		cars.add(new Car(xTmp, yTmp + 100, 100, 300, "v", 3, 2));
-		cars.add(new Car(xTmp, yTmp + 400arrayindex *100, 100, 200, "v", 2, 3));
-		cars.add(new Car(xTmp + 100, yTmp + 200, 200, 100, "h", 2, 4));
-		cars.add(new Car(xTmp + 300, yTmp + 100, 100, 300, "v", 3, 5));
-		cars.add(new Car(xTmp + 200, yTmp + 500, 300, 100, "h", 3, 6));
-		cars.add(new Car(xTmp + 400, yTmp + 400, 200, 100, "h", 2, 7));
-		cars.add(new Car(xTmp + 500, yTmp, 100, 300, "v", 3, 8));
-		//cars.add(new Car(xTmp + 300, yTmp, 300, 100, "h", 3));
-	} */
-
+	// give each car a color
+	private void setCarColors() {
+		carColor = new HashMap<>();
+		colors = new ArrayList<>(Arrays.asList("black", "blue", "dark_blue", "dark_orange", "dark_pink", "dark_yellow", "emerald", "green", "light_blue", "orange", "pink", "purple", "yellow"));
+		Collections.shuffle(colors);
+		Iterator<String> itr = colors.iterator();
+		for (int i = 0; itr.hasNext(); i++) {
+			carColor.put(i, itr.next());
+			itr.remove();
+		}
+	}
+	
 	private class Grid extends JPanel { 		
 		private Grid( ) {
-			setFocusable(true);
-			setFocusTraversalKeysEnabled(false);
-			setPreferredSize(new Dimension(600, 600));
 			initGrid();
 		}
 	
+		/**
+		 * Initialize mouse adapter for the grid
+		 */
 		public void initGrid() {
-			//setPreferredSize(new Dimension(590, 590));
-			//setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
-			
+			//setBackground(Color.GRAY);
+			setOpaque(false);
+			setPreferredSize(new Dimension(GRID_LENGTH, GRID_HEIGHT));
 			MouseAdapter carMouseAdapter = new MouseAdapter() {
 				private Car currSelected;
 				private Point distanceFromTopToClick;
@@ -153,50 +134,40 @@ public class GridLockGrid extends JPanel {
 						int row = (selected.getY() - BORDER_OFFSET)/100;	// top edge of car
 						int col = (selected.getX() - BORDER_OFFSET)/100;	// left edge of car
 						
+						// move horizontal car
 						if (selected.orientation().equals("h")) {
 							horizontalTryMove(row, col);
 							horizontalUpdateArray();
 							
 						}
+						// move vertical car 
 						if (selected.orientation().equals("v")) {
 							verticalTryMove(row, col);
 							verticalUpdateArray();
 							
+						}
+						// increment moves made if car moved
+						if (selected.getX() != oldX || selected.getY() != oldY) {
+							movesMade++;
+							frame.setMovesMade(movesMade);
 						}
 						oldX = selected.getX();
 						oldY = selected.getY();
 					}
 					printState();
 					repaint();
-					
-					// goal state test 
-					if (selected != null && selected.getId() == 4) {
-						if (selected.getX() == 400 + BORDER_OFFSET) {
-							System.out.println("Level Complete");
-							//Object[] buttonText = ;
-							//JOptionPane.showMessageDialog(null, "GZ", "Level Complete", JOptionPane.PLAIN_MESSAGE);
-
-			                Object[] options = {"prev", "home", "next", "idk", "DS"};	// result returns 0 1 2 etc
-
-			                int result = JOptionPane.showOptionDialog(null, "GZ", "Level Completed", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
-			                //System.out.println(result);
-			                if (result == JOptionPane.NO_OPTION) {
-			                	frame.newJPanel(current);
-			                }
-			                
-			                //frame.newJPanel();
-						}
-					}
+					checkGoalState();
 				}
 				
 				@Override
 				// move selected car to new position (e.getX, e.getY)
 				public void mouseDragged(MouseEvent e) {
+					frame.startTimer();
 					if (selected != null) {
 						int leftX = e.getX() - distanceFromTopToClick.x;
 						int leftY = e.getY() - distanceFromTopToClick.y;
 						// distanceFromTopToClick.y -> value from top to where click,  e.getY -> value from top of panel  similar with x
-						if (selected.orientation().equals("h")) {
+						if (selected.orientation().equals("h") && selected.contains(e.getPoint())) {
 							// prevent going outside grid on left
 							if (leftX < BORDER_OFFSET) 
 								selected.setX(BORDER_OFFSET);
@@ -206,7 +177,7 @@ public class GridLockGrid extends JPanel {
 							else 
 								selected.setX(leftX);
 						}
-						if (selected.orientation().equals("v")) {
+						if (selected.orientation().equals("v") && selected.contains(e.getPoint())) {
 							// prevent going outside grid up
 							if (leftY < BORDER_OFFSET) 
 								selected.setY(BORDER_OFFSET);
@@ -217,8 +188,6 @@ public class GridLockGrid extends JPanel {
 								selected.setY(leftY);
 						}
 						repaint();
-						//movesMade++;
-						//moves.setText(String.valueOf(movesMade));
 					}
 				}
 			};
@@ -226,37 +195,45 @@ public class GridLockGrid extends JPanel {
 			addMouseMotionListener(carMouseAdapter);
 		}
 		
+		/**
+		 * Draws cars onto the grid
+		 * @param g
+		 */
 		private void draw(Graphics g) {
-			/* TO DO   
-			 	- exit car is red
-			 	- different colors for different cars (?)
-			*/  
-			//ArrayList<Car> carList = current.getCarList();
 			Graphics2D g2 = (Graphics2D)g.create();
 			for (Car car : carList) {
+				// draw non-selected cars
 				if (car != selected) {
-					// draw non-selected cars
-					g2.setColor(Color.BLUE);
-					g2.fillRoundRect(car.getX(), car.getY(), car.getLength(), car.getHeight(), 15, 15);
+					if (car.isRed() == true && !carColor.get(car.getId()).equals("red"))  carColor.put(car.getId(), "red");
+					String carImagePath = "/cars/" + carColor.get(car.getId());
+					if (car.getSize() == 3) carImagePath += "_truck_" + car.orientation() + ".png";
+					else if (car.getSize() == 2) carImagePath += "_car_" + car.orientation() + ".png";
+					Image carImage = new ImageIcon(getClass().getResource(carImagePath)).getImage();
+					g2.drawImage(carImage, car.getX(), car.getY(), null);
 					// draw the border for non-selected cars
-					// white so it seems like there are gaps between cars
-					g2.setColor(Color.WHITE);
+					/*
+					g2.setColor(new Color(255,255,255));
 					Stroke oldStroke = g2.getStroke();
-					g2.setStroke(new BasicStroke((float) 4.0));
+					g2.setStroke(new BasicStroke((float) 1.0));
 					g2.drawRoundRect(car.getX(), car.getY(), car.getLength(), car.getHeight(), 15, 15);
-					g2.setStroke(oldStroke);
+					g2.setStroke(oldStroke);*/
 				}
 			}
+			
 			if (selected != null) {
 				// draw selected car
-				g2.setColor(Color.RED);
-				g2.fillRoundRect(selected.getX(), selected.getY(), selected.getLength(), selected.getHeight(), 15, 15);
+				String carImagePath = "/cars/" + carColor.get(selected.getId());
+				if (selected.getSize() == 3) carImagePath += "_truck_" + selected.orientation() + ".png";
+				else if (selected.getSize() == 2) carImagePath += "_car_" + selected.orientation() + ".png";
+				Image carImage = new ImageIcon(getClass().getResource(carImagePath)).getImage();
+				g2.drawImage(carImage, selected.getX(), selected.getY(), null);
+				
 				// draw the border of selected car
-				g2.setColor(Color.BLACK);
+			/*	g2.setColor(Color.WHITE);
 				Stroke oldStroke = g2.getStroke();
-				g2.setStroke(new BasicStroke((float) 2.0));
-				g2.drawRoundRect(selected.getX(), selected.getY(), selected.getLength(), selected.getHeight(), 15, 15);
-				g2.setStroke(oldStroke);
+				g2.setStroke(new BasicStroke((float) 3.0));
+				//g2.drawRoundRect(selected.getX(), selected.getY(), selected.getLength(), selected.getHeight(), 15, 15);
+				g2.setStroke(oldStroke);*/
 			}
 			g2.dispose();
 		}
@@ -267,7 +244,12 @@ public class GridLockGrid extends JPanel {
 			draw(g);
 		}
 
-		// ensures edges of car are on the edges of tiles
+		/**
+		 * Rounds value given to the nearest hundred
+		 * Ensures edges of car are on the edges of tiles
+		 * @param val
+		 * @return
+		 */
 		public int roundNearestHundred(int val) {
 			int value = val;
 			if (value < BORDER_OFFSET) return BORDER_OFFSET;
@@ -279,11 +261,29 @@ public class GridLockGrid extends JPanel {
 			return value;
 		}
 		
+		/**
+		 * Checks if the red car has reached the exit (last column)
+		 */
+		private void checkGoalState() {
+			if (selected != null && selected.isRed() == true) {
+				if (selected.getX() == 400 + BORDER_OFFSET) {
+					frame.stopTimer();
+					System.out.println("Level Complete");
+					new Message(frame, movesMade, frame.getTime());
+				}
+			}
+		}
+		
+		/**
+		 * Moves car left/right until car is on top of free tiles
+		 * @param row
+		 * @param col
+		 */
 		private void horizontalTryMove(int row, int col) {
+			int[][] gridState = current.getGridState();
 			int size = selected.getSize();
 			int nextFreeSlot = -1;
 			int j = 1, k = -1;
-			int[][] gridState = current.getGridState();
 			
 			int oldCol = (roundNearestHundred(oldX) - BORDER_OFFSET)/100;
 			// try move right 
@@ -320,11 +320,16 @@ public class GridLockGrid extends JPanel {
 				selected.setX(col*100 + BORDER_OFFSET);
 		}
 		
+		/**
+		 * Moves car up/down until the car is on top of free tiles
+		 * @param row
+		 * @param col
+		 */
 		private void verticalTryMove(int row, int col) {
+			int[][] gridState = current.getGridState();
 			int size = selected.getSize();
 			int nextFreeSlot = -1;
 			int j = 1, k = -1;
-			int[][] gridState = current.getGridState();
 			
 			int oldRow = (roundNearestHundred(oldY) - BORDER_OFFSET)/100;
 			// try move down
@@ -361,10 +366,13 @@ public class GridLockGrid extends JPanel {
 				selected.setY(row*100 + BORDER_OFFSET);
 		}
 		
+		/**
+		 * Updates current grid state for horizontal cars
+		 */
 		private void horizontalUpdateArray() {
+			int[][] gridState = current.getGridState();
 			int col = (selected.getX() - BORDER_OFFSET)/100;
 			int row = (selected.getY() - BORDER_OFFSET)/100;
-			int[][] gridState = current.getGridState();
 			for (int i = 0; i < 6; i++) {
 				if (gridState[row][i] == selected.getId()) {
 					gridState[row][i] = -1;
@@ -375,6 +383,9 @@ public class GridLockGrid extends JPanel {
 			}
 		}
 		
+		/**
+		 * Updates current grid state for vertical cars
+		 */
 		private void verticalUpdateArray() {
 			int[][] gridState = current.getGridState();
 			int row = (selected.getY() - BORDER_OFFSET)/100;
@@ -389,6 +400,10 @@ public class GridLockGrid extends JPanel {
 			}
 		}
 		
+		/**
+		 * Test 
+		 * Show current grid state
+		 */
 		public void printState() {
 			int[][] gridState = current.getGridState();
 			for (int i = 0; i < 6; i++) {
@@ -403,28 +418,4 @@ public class GridLockGrid extends JPanel {
 			System.out.println();
 		}
 	}
-	
-	// for later if want to add buttons below (?)
-	// different file 
-	private class Utilities extends JPanel {
-		private Utilities() {
-			initUtilities();
-		}
-		
-		public void initUtilities() {
-			button1 = new JButton( new AbstractAction("idk") {
-				
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					// TODO Auto-generated method stub
-				}
-				
-			});
-			//button2 = new JButton("hhkj");
-			setLayout(new BorderLayout());
-			add(button1, BorderLayout.EAST);
-			//add(button2, BorderLayout.WEST);
-		}
-	} 
-
 }

@@ -11,7 +11,6 @@ public class Level {
 		
 	}
 	
-
 	public Puzzle getInit() {
 		return init;
 	}

@@ -5,8 +5,10 @@ public class Car {
 	private int height, length, size;
 	private String orientation;
 	private int id;
+	private String color;
+	private boolean red;
 	
-	public Car(int x, int y, int length, int height, String orientation, int size, int id) {
+	public Car(int x, int y, int length, int height, String orientation, int size, int id, boolean red) {
 		this.x = x;
 		this.y = y;
 		this.height = height;
@@ -14,6 +16,15 @@ public class Car {
 		this.orientation = orientation;
 		this.size = size;
 		this.id = id;
+		this.red = red;
+	}
+	
+	public String getColor() {
+		return this.color;
+	}
+	
+	public boolean isRed() {
+		return this.red;
 	}
 	
 	public int getId() {
@@ -58,3 +69,4 @@ public class Car {
 		return true;
 	}
 }
+

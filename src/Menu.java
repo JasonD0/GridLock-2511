@@ -1,85 +1,84 @@
-import java.awt.*;
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridLayout;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.MouseListener;
-import java.awt.Robot;
-import java.awt.Shape;
-import java.awt.Stroke;
+import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import javax.imageio.*;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 
+import javax.swing.AbstractAction;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 public class Menu extends JPanel {
-    public Rectangle playButton = new Rectangle(235, 150, 150, 50);
-    public Rectangle exitButton = new Rectangle(235, 250, 150, 50);
-    public Rectangle helpButton = new Rectangle(235, 350, 150, 50);
+	JButton start = new JButton();
+	JButton help = new JButton();
+	JButton quit = new JButton();
+	GridLockFrame game;
 
+	public Menu(GridLockFrame game) {
+		this.game = game;
+		Box box = new Box(BoxLayout.Y_AXIS);
+		
+		box.add(Box.createRigidArea(new Dimension(0,197))); // add gap
+		
+		start.setAlignmentX(CENTER_ALIGNMENT);
+		start.setBorderPainted(false);
+		//start.setMargin(new Insets(-2,-2,-3,-2));
+		start.setFocusable(false);
+		Image menuIcon = new ImageIcon(getClass().getResource("button_play (1).png")).getImage();
+		menuIcon = menuIcon.getScaledInstance(110, 61, Image.SCALE_DEFAULT);
+		start.setIcon(new ImageIcon(menuIcon));
+		start.setContentAreaFilled(false);
+		start.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				game.levelPage();
+			}
+		});
+		box.add(start);
 
+		box.add(Box.createRigidArea(new Dimension(0,8))); // add gap
+		
+		help.setAlignmentX(CENTER_ALIGNMENT);
+		help.setBorderPainted(false);
+		help.setFocusable(false);
+		Image helpIcon = new ImageIcon(getClass().getResource("button_help.png")).getImage();
+		helpIcon = helpIcon.getScaledInstance(110, 60, Image.SCALE_DEFAULT);
+		help.setIcon(new ImageIcon(helpIcon));
+		help.setContentAreaFilled(false);
+		help.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				game.helpPage();
+			}
+		});
+		box.add(help);
+		
+		box.add(Box.createRigidArea(new Dimension(0,6))); // add gap
+		
+		quit.setAlignmentX(CENTER_ALIGNMENT);
+		quit.setBorderPainted(false);
+		quit.setFocusable(false);
+		Image quitIcon = new ImageIcon(getClass().getResource("button_exit.png")).getImage();
+		quitIcon = quitIcon.getScaledInstance(110, 60, Image.SCALE_DEFAULT);
+		quit.setIcon(new ImageIcon(quitIcon));
+		quit.setContentAreaFilled(false);
+		quit.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		box.add(quit);
+		
+		add(box);
+	}
 
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        JLabel backgroundImage;
-        ImageIcon menuIcon = new ImageIcon(this.getClass().getResource("Menu Background.png"));
-        backgroundImage = new JLabel("",menuIcon,JLabel.CENTER);
-        backgroundImage.setBounds(0,0,600,600);
-        add(backgroundImage);
-        //g.drawImage(menuIcon, 0, 0, getWidth(), getHeight(), this); // draw the image
-        //this.setBackground(Color.BLACK);
-        render(g);
-    }
-
-    public void render(Graphics g){
-        Graphics2D g2d = (Graphics2D) g;
-
-        Font fnt0 = new Font("arial", Font.BOLD,50);
-        g.setFont(fnt0);
-        g.setColor(Color.white);
-        g.drawString("GridLock", 200,100);
-
-        Font fnt1 = new Font("Arial", Font.BOLD, 30);
-        g.setFont(fnt1);
-        g.drawString("Play", 280, 185);
-        g.drawString("Exit", 280, 285);
-        g.drawString("Help", 280, 385);
-        g2d.draw(playButton);
-        g2d.draw(exitButton);
-        g2d.draw(helpButton);
-    }
-
-    public void mousePressed(MouseEvent e) {
-        int x = e.getX();
-        int y = e.getY();
-
-        if(x>235 && x<385){
-            if(y>150 && y<200){
-                //Click on playButton
-                GridLockFrame.State = GridLockFrame.State.GAME;
-            }
-            if(y>150 && y<200){
-                //Click on exitButton
-            }
-            if(y>150 && y<200){
-                //Click on helpButton
-            }
-        }
-    }
-
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		g.drawImage(new ImageIcon(Menu.class.getResource("MenuComplete.png")).getImage(), 0, 0, 680, 658, this);
+	}
 }

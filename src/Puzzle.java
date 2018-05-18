@@ -61,16 +61,16 @@ public class Puzzle {
 		};
 		
 		// test
-		Car newOne = new Car(0, 0, 200, 100, "h", 2, 1);
+		Car newOne = new Car(0, 0, 200, 100, "h", 2, 1, false);
 		carList.add(newOne);     
-		carList.add(new Car(0, 0 + 100, 100, 300, "v", 3, 2));
-		carList.add(new Car(0, 0 + 400, 100, 200, "v", 2, 3));
-		carList.add(new Car(0 + 100, 0 + 200, 200, 100, "h", 2, 4));
-		carList.add(new Car(0 + 300, 0 + 100, 100, 300, "v", 3, 5));
-		carList.add(new Car(0 + 200, 0 + 500, 300, 100, "h", 3, 6));
-		carList.add(new Car(0 + 400, 0 + 400, 200, 100, "h", 2, 7));
-		carList.add(new Car(0 + 500, 0, 100, 300, "v", 3, 8));
-		//carList.add(new Car(0 + 300, 0, 300, 100, "h", 3, 9));
+		carList.add(new Car(0, 0 + 100, 100, 300, "v", 3, 2, false));
+		carList.add(new Car(0, 0 + 400, 100, 200, "v", 2, 3, false));
+		carList.add(new Car(0 + 100, 0 + 200, 200, 100, "h", 2, 4, true));
+		carList.add(new Car(0 + 300, 0 + 100, 100, 300, "v", 3, 5, false));
+		carList.add(new Car(0 + 200, 0 + 500, 300, 100, "h", 3, 6, false));
+		carList.add(new Car(0 + 400, 0 + 400, 200, 100, "h", 2, 7, false));
+		carList.add(new Car(0 + 500, 0, 100, 300, "v", 3, 8, false));
+		//carList.add(new Car(0 + 300, 0, 300, 100, "h", 3, 9, false));
 	
 	}
 	
