@@ -20,15 +20,15 @@ public class Menu extends JPanel {
 	public Menu(GridLockFrame game) {
 		this.game = game;
 		Box box = new Box(BoxLayout.Y_AXIS);
-		
+
 		box.add(Box.createRigidArea(new Dimension(0,197))); // add gap
-		
+
 		start.setAlignmentX(CENTER_ALIGNMENT);
 		start.setBorderPainted(false);
 		//start.setMargin(new Insets(-2,-2,-3,-2));
 		start.setFocusable(false);
 		Image menuIcon = new ImageIcon(getClass().getResource("button_play (1).png")).getImage();
-		menuIcon = menuIcon.getScaledInstance(110, 61, Image.SCALE_DEFAULT);
+		menuIcon = menuIcon.getScaledInstance(110, 61, Image.SCALE_SMOOTH);
 		start.setIcon(new ImageIcon(menuIcon));
 		start.setContentAreaFilled(false);
 		start.addActionListener(new AbstractAction() {
@@ -40,12 +40,12 @@ public class Menu extends JPanel {
 		box.add(start);
 
 		box.add(Box.createRigidArea(new Dimension(0,8))); // add gap
-		
+
 		help.setAlignmentX(CENTER_ALIGNMENT);
 		help.setBorderPainted(false);
 		help.setFocusable(false);
 		Image helpIcon = new ImageIcon(getClass().getResource("button_help.png")).getImage();
-		helpIcon = helpIcon.getScaledInstance(110, 60, Image.SCALE_DEFAULT);
+		helpIcon = helpIcon.getScaledInstance(110, 60, Image.SCALE_SMOOTH);
 		help.setIcon(new ImageIcon(helpIcon));
 		help.setContentAreaFilled(false);
 		help.addActionListener(new AbstractAction() {
@@ -55,14 +55,14 @@ public class Menu extends JPanel {
 			}
 		});
 		box.add(help);
-		
+
 		box.add(Box.createRigidArea(new Dimension(0,6))); // add gap
-		
+
 		quit.setAlignmentX(CENTER_ALIGNMENT);
 		quit.setBorderPainted(false);
 		quit.setFocusable(false);
 		Image quitIcon = new ImageIcon(getClass().getResource("button_exit.png")).getImage();
-		quitIcon = quitIcon.getScaledInstance(110, 60, Image.SCALE_DEFAULT);
+		quitIcon = quitIcon.getScaledInstance(110, 60, Image.SCALE_SMOOTH);
 		quit.setIcon(new ImageIcon(quitIcon));
 		quit.setContentAreaFilled(false);
 		quit.addActionListener(new AbstractAction() {
@@ -72,7 +72,7 @@ public class Menu extends JPanel {
 			}
 		});
 		box.add(quit);
-		
+
 		add(box);
 	}
 
@@ -81,7 +81,7 @@ public class Menu extends JPanel {
 		super.paintComponent(g);
 		draw(g);
 	}
-	
+
 	public void draw(Graphics g) {
 		g.drawImage(new ImageIcon(Menu.class.getResource("menugif1.gif")).getImage(), 0, 0, 680, 658, this);
 	}

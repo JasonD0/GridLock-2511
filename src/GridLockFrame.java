@@ -1,11 +1,14 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.Timer;
@@ -26,7 +29,7 @@ public class GridLockFrame extends JFrame implements Runnable{
 	private Timer time;
 	private int counter;
 	private Box box;
-	
+
 	/**
 	 * Constructor for GridLockFrame
 	 * @param g
@@ -34,11 +37,11 @@ public class GridLockFrame extends JFrame implements Runnable{
 	public GridLockFrame(Game g) {
 		this.g = g;
 	}
-	
-/*	public Puzzle getPuzzle() {	
+
+	/*	public Puzzle getPuzzle() {	
 		return this.g.getLevel().getInit();
 	}*/
-	
+
 	/**
 	 * Returns initial state of the current puzzle
 	 * @return    Puzzle 
@@ -46,7 +49,7 @@ public class GridLockFrame extends JFrame implements Runnable{
 	public Puzzle getInitialState() {	
 		return this.g.getLevel().getInit().clonePuzzle();
 	}
-	
+
 	/**
 	 * Creates game window
 	 */
@@ -55,18 +58,18 @@ public class GridLockFrame extends JFrame implements Runnable{
 		setTitle("GridLock");
 		setBackground(new Color(51,51,51));
 		box = new Box(BoxLayout.Y_AXIS);
-		
+
 		//setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("home1.png").getImage(), new Point(0,0), "cursor"));
-		
+
 		mainMenu();
-		
+
 		pack();
 		setVisible(true);
 		setResizable(false);
 		setLocationRelativeTo(null) ;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
-	
+
 	/**
 	 * Changes current frame to show the main menu
 	 */
@@ -81,7 +84,7 @@ public class GridLockFrame extends JFrame implements Runnable{
 		setLocationRelativeTo(null);
 		this.setContentPane(box);
 	}
-	
+
 	/**
 	 * Changes current frame to show levels/difficulty choosing page
 	 */
@@ -96,7 +99,7 @@ public class GridLockFrame extends JFrame implements Runnable{
 		setLocationRelativeTo(null);
 		this.setContentPane(box);
 	}
-	
+
 	/**
 	 * Changes current frame to show instructions
 	 */
@@ -111,9 +114,9 @@ public class GridLockFrame extends JFrame implements Runnable{
 		box.add(help);
 		setLocationRelativeTo(null);
 		this.setContentPane(box);
-		
+
 	}
-	
+
 	/**
 	 * Changes current frame to show the puzzle
 	 */
@@ -123,18 +126,20 @@ public class GridLockFrame extends JFrame implements Runnable{
 		setMinimumSize(new Dimension(FRAME_LENGTH, FRAME_HEIGHT));
 		setSize(new Dimension(FRAME_LENGTH, FRAME_HEIGHT));
 		Box head = new Box(BoxLayout.X_AXIS);
-		
+
 		// adds time spent and moves made for the puzzle 
 		head.add(initMovesLabel());
 		head.add(Box.createRigidArea(new Dimension(200,70))); // add gap
 		head.add(initTimeLabel());
-		
+		head.add(Box.createRigidArea(new Dimension(100,70))); // add gap
+		head.add(autoFinish());
+
 		// creates the interface for the puzzle
 		GridLockGrid grid = new GridLockGrid(getInitialState(), this);
 		grid.setPreferredSize(new Dimension(638, 642));
 		grid.setMaximumSize(new Dimension(638, 642));
 		grid.setMinimumSize(new Dimension(638, 642));
-		
+
 		box.removeAll();
 		box.add(head);
 		box.add(grid);
@@ -143,7 +148,28 @@ public class GridLockFrame extends JFrame implements Runnable{
 		setLocationRelativeTo(null);
 		setContentPane(box);
 	}
-	
+
+	private JButton autoFinish() {
+		JButton autoFinish = new JButton();
+		autoFinish.setFocusable(false);
+		autoFinish.setBorderPainted(false);
+		ImageIcon next = new ImageIcon(getClass().getResource("autoNext_on.png"));
+		// next = new ImageIcon(getClass().getResource("autoNext_off.png"));
+		Image nextImage = next.getImage();
+		nextImage = nextImage.getScaledInstance(45, 45, Image.SCALE_SMOOTH);
+		next = new ImageIcon(nextImage);
+		autoFinish.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// if have dont have free skip -> give option to buy 
+			}
+		});
+		autoFinish.setIcon(next);
+		autoFinish.setBackground(new Color(51,51,51));
+		autoFinish.setOpaque(false);
+		return autoFinish;
+	}
+
 	/**
 	 * Creates timer for the current puzzle
 	 * @return    time JPanel
@@ -165,7 +191,7 @@ public class GridLockFrame extends JFrame implements Runnable{
 		timeLabel.setForeground(new Color(255,153,0));
 		return timeLabel;
 	}
-	
+
 	/**
 	 * Creates JPanel to indicate number of moves made for the current puzzle
 	 * @return    moves JPanel
@@ -177,7 +203,7 @@ public class GridLockFrame extends JFrame implements Runnable{
 		movesMadeLabel.setForeground(new Color(255,153,0));
 		return movesMadeLabel;
 	}
-	
+
 	/**
 	 * Updates number of moves made for current puzzle
 	 * @param movesMade
@@ -186,21 +212,21 @@ public class GridLockFrame extends JFrame implements Runnable{
 		String move = "Moves  " + String.valueOf(movesMade);
 		this.movesMadeLabel.setText(move);
 	}
-	
+
 	/**
 	 * Starts timer for the current puzzle
 	 */
 	public void startTimer() {
 		if (time != null) time.start();
 	}
-	
+
 	/**
 	 * Stops timer for the current puzzle
 	 */
 	public void stopTimer() {
 		time.stop();
 	}
-	
+
 	/**
 	 * Returns time taken to complete the puzzle
 	 * @return    time taken
@@ -208,7 +234,7 @@ public class GridLockFrame extends JFrame implements Runnable{
 	public int getTime() {
 		return this.counter;
 	}
-	
+
 	/**
 	 * Increases time taken for current puzzle
 	 */
