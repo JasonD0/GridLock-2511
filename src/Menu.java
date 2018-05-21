@@ -79,6 +79,10 @@ public class Menu extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(new ImageIcon(Menu.class.getResource("MenuComplete.png")).getImage(), 0, 0, 680, 658, this);
+		draw(g);
+	}
+	
+	public void draw(Graphics g) {
+		g.drawImage(new ImageIcon(Menu.class.getResource("menugif1.gif")).getImage(), 0, 0, 680, 658, this);
 	}
 }

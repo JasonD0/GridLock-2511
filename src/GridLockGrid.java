@@ -1,4 +1,3 @@
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -7,19 +6,12 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Stroke;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +20,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+/**
+ * Implements the interface for the puzzle  
+ *
+ */
 
 public class GridLockGrid extends JPanel {
 	private final int GRID_HEIGHT = 601;
@@ -42,9 +39,15 @@ public class GridLockGrid extends JPanel {
 	private int movesMade = 0;
 	private int oldX = BORDER_OFFSET;
 	private int oldY = BORDER_OFFSET;
-	private int index = 0;
+	private boolean help = false;
+	private boolean reward = true;
 	int x = 0, y = 0, velX = 0, velY = 0;
 	
+	/**
+	 * Constructor for GridLockGrid
+	 * @param initial
+	 * @param frame
+	 */
 	public GridLockGrid(Puzzle initial, GridLockFrame frame) {
 		this.frame = frame;
 		this.current = initial;
@@ -57,6 +60,8 @@ public class GridLockGrid extends JPanel {
 		pane.setLayout(new GridBagLayout());
 		GridBagConstraints gb = new GridBagConstraints();
 		gb.anchor = GridBagConstraints.CENTER;
+		
+		// create interface for puzzle
 		pane.add(new Grid());
 		add(pane);
 		setCarColors();
@@ -64,7 +69,9 @@ public class GridLockGrid extends JPanel {
 		carList = initial.getCarList();
 	}
 	
-	// give each car a color
+	/**
+	 * Assigns a unique color to each car
+	 */
 	private void setCarColors() {
 		carColor = new HashMap<>();
 		colors = new ArrayList<>(Arrays.asList("black", "blue", "dark_blue", "dark_orange", "dark_pink", "dark_yellow", "emerald", "green", "light_blue", "orange", "pink", "purple", "yellow"));
@@ -76,7 +83,30 @@ public class GridLockGrid extends JPanel {
 		}
 	}
 	
-	private class Grid extends JPanel { 		
+	/**
+	 * Sets help boolean to indicate whether user wants to delete a car
+	 * @param bool
+	 */
+	public void setHelp(boolean bool) {
+		this.help = bool;
+	}
+
+	/**
+	 * Checks if user clicked the help (delete car) button
+	 * @return
+	 */
+	public boolean checkHelp() {
+		return this.help;
+	}
+	
+	/**
+	 * Implements the interface for the cars
+	 *
+	 */
+	private class Grid extends JPanel { 	
+		/**
+		 * Constructor for Grid 
+		 */
 		private Grid( ) {
 			initGrid();
 		}
@@ -92,9 +122,18 @@ public class GridLockGrid extends JPanel {
 				private Car currSelected;
 				private Point distanceFromTopToClick;
 				
+				/**
+				 * Saves information of the car pressed and co-ordinates of the mouse click
+				 * 
+				 */
 				@Override
 				public void mousePressed(MouseEvent e) {
-					// check if clicked on a car
+					// removes the car selected
+					if (help == true) {
+						removeCar(e);	
+						frame.startTimer();
+					}
+					
 					currSelected = selected;
 					if (selected == null || !selected.contains(e.getPoint())) {
 						for (Car car : carList) {
@@ -112,10 +151,11 @@ public class GridLockGrid extends JPanel {
 					}
 				}
 				
+				/**
+				 * Reset information of the current car 
+				 */
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					// clicking anything else again deselect
-					//repaint();
 					if (selected != null && selected == currSelected) {
 						selected.setX(roundNearestHundred(selected.getX()));
 						selected.setY(roundNearestHundred(selected.getY()));
@@ -124,6 +164,10 @@ public class GridLockGrid extends JPanel {
 					}
 				}
 				
+				/**
+				 * Collision detection of the cars
+				 * Moves cars back towards it's old position until the car sits on free tiles
+				 */
 				@Override
 			    public void mouseReleased(MouseEvent e) {
 					if (selected != null) {
@@ -151,6 +195,8 @@ public class GridLockGrid extends JPanel {
 							movesMade++;
 							frame.setMovesMade(movesMade);
 						}
+						
+						// save old position of the current car
 						oldX = selected.getX();
 						oldY = selected.getY();
 					}
@@ -159,14 +205,19 @@ public class GridLockGrid extends JPanel {
 					checkGoalState();
 				}
 				
+				/**
+				 * Moves selected car towards the mouse drag
+				 */
 				@Override
-				// move selected car to new position (e.getX, e.getY)
 				public void mouseDragged(MouseEvent e) {
 					frame.startTimer();
 					if (selected != null) {
+						// gets current car's top left corner co-ordinates
+						// distanceFromTopToClick.y is the value from top to the click, e.getY is the value from top of panel  
 						int leftX = e.getX() - distanceFromTopToClick.x;
 						int leftY = e.getY() - distanceFromTopToClick.y;
-						// distanceFromTopToClick.y -> value from top to where click,  e.getY -> value from top of panel  similar with x
+						
+						// move horizontal cars
 						if (selected.orientation().equals("h") && selected.contains(e.getPoint())) {
 							// prevent going outside grid on left
 							if (leftX < BORDER_OFFSET) 
@@ -177,6 +228,7 @@ public class GridLockGrid extends JPanel {
 							else 
 								selected.setX(leftX);
 						}
+						// move vertical cars
 						if (selected.orientation().equals("v") && selected.contains(e.getPoint())) {
 							// prevent going outside grid up
 							if (leftY < BORDER_OFFSET) 
@@ -195,45 +247,35 @@ public class GridLockGrid extends JPanel {
 			addMouseMotionListener(carMouseAdapter);
 		}
 		
+		
 		/**
 		 * Draws cars onto the grid
 		 * @param g
 		 */
 		private void draw(Graphics g) {
 			Graphics2D g2 = (Graphics2D)g.create();
+			// draw all non-selected cars
 			for (Car car : carList) {
-				// draw non-selected cars
 				if (car != selected) {
+					// initialize red car
 					if (car.isRed() == true && !carColor.get(car.getId()).equals("red"))  carColor.put(car.getId(), "red");
-					String carImagePath = "/cars/" + carColor.get(car.getId());
+					
+					// sets car image 
+					String carImagePath = "/cars/" + carColor.get(car.getId());				
 					if (car.getSize() == 3) carImagePath += "_truck_" + car.orientation() + ".png";
 					else if (car.getSize() == 2) carImagePath += "_car_" + car.orientation() + ".png";
 					Image carImage = new ImageIcon(getClass().getResource(carImagePath)).getImage();
 					g2.drawImage(carImage, car.getX(), car.getY(), null);
-					// draw the border for non-selected cars
-					/*
-					g2.setColor(new Color(255,255,255));
-					Stroke oldStroke = g2.getStroke();
-					g2.setStroke(new BasicStroke((float) 1.0));
-					g2.drawRoundRect(car.getX(), car.getY(), car.getLength(), car.getHeight(), 15, 15);
-					g2.setStroke(oldStroke);*/
 				}
 			}
 			
+			// draw selected car
 			if (selected != null) {
-				// draw selected car
 				String carImagePath = "/cars/" + carColor.get(selected.getId());
 				if (selected.getSize() == 3) carImagePath += "_truck_" + selected.orientation() + ".png";
 				else if (selected.getSize() == 2) carImagePath += "_car_" + selected.orientation() + ".png";
 				Image carImage = new ImageIcon(getClass().getResource(carImagePath)).getImage();
-				g2.drawImage(carImage, selected.getX(), selected.getY(), null);
-				
-				// draw the border of selected car
-			/*	g2.setColor(Color.WHITE);
-				Stroke oldStroke = g2.getStroke();
-				g2.setStroke(new BasicStroke((float) 3.0));
-				//g2.drawRoundRect(selected.getX(), selected.getY(), selected.getLength(), selected.getHeight(), 15, 15);
-				g2.setStroke(oldStroke);*/
+				g2.drawImage(carImage, selected.getX(), selected.getY(), null);			
 			}
 			g2.dispose();
 		}
@@ -269,7 +311,7 @@ public class GridLockGrid extends JPanel {
 				if (selected.getX() == 400 + BORDER_OFFSET) {
 					frame.stopTimer();
 					System.out.println("Level Complete");
-					new Message(frame, movesMade, frame.getTime());
+					new Message(frame, movesMade, frame.getTime(), reward);
 				}
 			}
 		}
@@ -417,5 +459,35 @@ public class GridLockGrid extends JPanel {
 			}
 			System.out.println();
 		}
+	}
+
+	/**
+	 * Remove car selected from the puzzle and set penalty (increase time taken and moves made)
+	 * @param e
+	 */
+	private void removeCar(MouseEvent e) {
+		List<Car> toRemove = new ArrayList<>();
+		for (Car car : carList) {
+			if (car.contains(e.getPoint()) && car.isRed() == false) {
+				toRemove.add(car);
+				int[][] gridState = current.getGridState();
+				for (int i = 0; i < 6; i++) {
+					for (int j = 0; j < 6; j++) {
+						if (gridState[i][j] == car.getId()) {
+							gridState[i][j] = -1;
+						}
+					}
+				}
+				reward = false;
+				movesMade += 50;
+				frame.increaseTime();
+				frame.setMovesMade(movesMade);
+				break;
+			}
+		}
+		selected = null;
+		help = false;
+		setCursor(null);
+		carList.removeAll(toRemove);
 	}
 }

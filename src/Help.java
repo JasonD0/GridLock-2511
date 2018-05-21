@@ -1,13 +1,10 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
+
 import javax.swing.*;
-import java.awt.Dimension;
 
 public class Help extends JPanel {
     GridLockFrame game;
@@ -19,10 +16,10 @@ public class Help extends JPanel {
         setLayout(null);
 
         add(Box.createVerticalStrut(160));
-        Return.setPreferredSize(new Dimension(100, 20));
+        //Return.setPreferredSize(new Dimension(100, 70));
         ImageIcon startIcon = new ImageIcon(Menu.class.getResource("button_exit.png"/*return*/));
         Return.setIcon(startIcon);
-        Return.setBounds(275,500, 108,43);
+        Return.setBounds(275,500, 88,43);
 
         Return.addActionListener(new AbstractAction() {
             @Override
@@ -34,12 +31,15 @@ public class Help extends JPanel {
 
         add(Box.createVerticalStrut(160));
         String s =
-                "The objective of the game is to get the red car out of the game                                   " +
-                        "Vertical cars only move vertically!  " +
-                        "Horizontal cars only move horizontally!  " +
-                        "Drag these cars around the grid to give way for the red car to reach the exit";
+                "\nThe objective of the game is to get the red car out of the game\n" +
+                        "Vertical cars only move vertically!\n" +
+                        "Horizontal cars only move horizontally!\n" +
+                        "Drag these cars around the grid to give way for the red car to reach the exit\n" +
+                        "Completing a level will earn you an animal\n" + 
+                        "Collecting all the animals will ... \n" +
+				        "Delete cars if you are stuck but you will receive a penalty and no rewards";
         helpText.setText(s);
-        helpText.setFont(new Font("Serif", Font.HANGING_BASELINE, 28 ));
+        helpText.setFont(new Font("Serif", Font.HANGING_BASELINE, 19 ));
         helpText.setBounds(10,40,500,500);
         helpText.setOpaque(false);
         helpText.setBorder(BorderFactory.createEmptyBorder());

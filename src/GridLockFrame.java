@@ -4,26 +4,33 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.Timer;
 
+/**
+ * Implements the game frame and handles the view of different screens
+ *
+ */
+
 public class GridLockFrame extends JFrame implements Runnable{
-	
 	private static final int FRAME_HEIGHT = 820; 
 	private static final int FRAME_LENGTH = 700;
 	private static final int MENU_HEIGHT = 697;
 	private static final int MENU_LENGTH = 696;
 	private JLabel movesMadeLabel;
+	private JLabel timeLabel;
 	private Game g;
 	private Timer time;
 	private int counter;
 	private Box box;
 	
+	/**
+	 * Constructor for GridLockFrame
+	 * @param g
+	 */
 	public GridLockFrame(Game g) {
 		this.g = g;
 	}
@@ -48,7 +55,9 @@ public class GridLockFrame extends JFrame implements Runnable{
 		setTitle("GridLock");
 		setBackground(new Color(51,51,51));
 		box = new Box(BoxLayout.Y_AXIS);
-	
+		
+		//setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("home1.png").getImage(), new Point(0,0), "cursor"));
+		
 		mainMenu();
 		
 		pack();
@@ -74,7 +83,7 @@ public class GridLockFrame extends JFrame implements Runnable{
 	}
 	
 	/**
-	 * Changes current frame to show levels/diffculty choosing page
+	 * Changes current frame to show levels/difficulty choosing page
 	 */
 	public void levelPage() {
 		box.removeAll();
@@ -113,22 +122,23 @@ public class GridLockFrame extends JFrame implements Runnable{
 		setMaximumSize(new Dimension(FRAME_LENGTH, FRAME_HEIGHT));
 		setMinimumSize(new Dimension(FRAME_LENGTH, FRAME_HEIGHT));
 		setSize(new Dimension(FRAME_LENGTH, FRAME_HEIGHT));
-		
 		Box head = new Box(BoxLayout.X_AXIS);
+		
+		// adds time spent and moves made for the puzzle 
 		head.add(initMovesLabel());
 		head.add(Box.createRigidArea(new Dimension(200,70))); // add gap
 		head.add(initTimeLabel());
 		
+		// creates the interface for the puzzle
 		GridLockGrid grid = new GridLockGrid(getInitialState(), this);
 		grid.setPreferredSize(new Dimension(638, 642));
 		grid.setMaximumSize(new Dimension(638, 642));
 		grid.setMinimumSize(new Dimension(638, 642));
-		//grid.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		
 		box.removeAll();
 		box.add(head);
 		box.add(grid);
-		box.add(new GridButtonsPanel(this));
+		box.add(new GridButtonsPanel(this, grid));
 
 		setLocationRelativeTo(null);
 		setContentPane(box);
@@ -142,7 +152,7 @@ public class GridLockFrame extends JFrame implements Runnable{
 		if (time != null) time.stop();
 		counter = 0;
 		String timer = "Time  " + counter;
-		JLabel timeLabel = new JLabel(timer);
+		timeLabel = new JLabel(timer);
 		timeLabel.setFont(new Font("Britannic Bold", Font.BOLD, 25));
 		time = new Timer(1000, new ActionListener() {
 			@Override
@@ -181,7 +191,7 @@ public class GridLockFrame extends JFrame implements Runnable{
 	 * Starts timer for the current puzzle
 	 */
 	public void startTimer() {
-		time.start();
+		if (time != null) time.start();
 	}
 	
 	/**
@@ -197,5 +207,14 @@ public class GridLockFrame extends JFrame implements Runnable{
 	 */
 	public int getTime() {
 		return this.counter;
+	}
+	
+	/**
+	 * Increases time taken for current puzzle
+	 */
+	public void increaseTime() {
+		this.counter += 100;
+		String timer = "Time  " + counter;
+		timeLabel.setText(timer);
 	}
 }

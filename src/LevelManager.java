@@ -21,7 +21,7 @@ public class LevelManager extends JPanel {
         add(Box.createVerticalStrut(50));
         Easy.setAlignmentX(CENTER_ALIGNMENT);
         Easy.setPreferredSize(new Dimension(10, 10));
-        ImageIcon startIcon = new ImageIcon(Menu.class.getResource("button_play (1).png"/*easy*/));
+        ImageIcon startIcon = new ImageIcon(Menu.class.getResource("button_easy.png"));
         Easy.setIcon(startIcon);
 
         Easy.addActionListener(new AbstractAction() {
@@ -36,7 +36,7 @@ public class LevelManager extends JPanel {
         add(Box.createVerticalStrut(50));
         Intermeidate.setAlignmentX(CENTER_ALIGNMENT);
         Intermeidate.setPreferredSize(new Dimension(100, 20));
-        ImageIcon icon = new ImageIcon(Menu.class.getResource("button_play (1).png"/*intermediate*/));
+        ImageIcon icon = new ImageIcon(Menu.class.getResource("button_intermediate.png"));
         Intermeidate.setIcon(icon);
 
         Intermeidate.addActionListener(new AbstractAction() {
@@ -45,12 +45,12 @@ public class LevelManager extends JPanel {
             	game.newPuzzlePanel();
             }
         });
-        Intermeidate.setBounds(280,250,85,42);
+        Intermeidate.setBounds(250,250,150,42);
         add(Intermeidate);
 
         Hard.setAlignmentX(CENTER_ALIGNMENT);
         Hard.setPreferredSize(new Dimension(100, 20));
-        ImageIcon Hardicon = new ImageIcon(Menu.class.getResource("button_play (1).png"/*hard*/));
+        ImageIcon Hardicon = new ImageIcon(Menu.class.getResource("button_hard.png"));
         Hard.setIcon(Hardicon);
         Hard.setBounds(280,350,86,42);
 
@@ -64,7 +64,7 @@ public class LevelManager extends JPanel {
 
         Return.setAlignmentX(CENTER_ALIGNMENT);
         Return.setPreferredSize(new Dimension(100, 20));
-        ImageIcon Returnicon = new ImageIcon(Menu.class.getResource("button_play (1).png"/*return*/));
+        ImageIcon Returnicon = new ImageIcon(Menu.class.getResource("button_exit.png"));
         Return.setIcon(Returnicon);
         Return.setBounds(280,450,86,42);
 
