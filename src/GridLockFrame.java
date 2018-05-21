@@ -11,6 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.Timer;
 
 /**
@@ -127,11 +128,17 @@ public class GridLockFrame extends JFrame implements Runnable{
 		setSize(new Dimension(FRAME_LENGTH, FRAME_HEIGHT));
 		Box head = new Box(BoxLayout.X_AXIS);
 
-		// adds time spent and moves made for the puzzle 
-		head.add(initMovesLabel());
-		head.add(Box.createRigidArea(new Dimension(200,70))); // add gap
-		head.add(initTimeLabel());
-		head.add(Box.createRigidArea(new Dimension(100,70))); // add gap
+		// adds time spent, moves made and auto finish for the puzzle
+		JPanel header= new JPanel();
+		header.setMaximumSize(new Dimension(500, 70));
+		header.setPreferredSize(new Dimension(500, 70));
+		header.setMinimumSize(new Dimension(500, 70));
+		header.setOpaque(false);
+		header.add(initMovesLabel());
+		header.add(Box.createRigidArea(new Dimension(125, 70))); // add gap
+		header.add(initTimeLabel());
+		
+		head.add(header);
 		head.add(autoFinish());
 
 		// creates the interface for the puzzle
