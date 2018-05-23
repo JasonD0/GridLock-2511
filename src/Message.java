@@ -93,7 +93,12 @@ public class Message {
 		ribbon = new ImageIcon(ribbonImage);
 
 		// Create level completion message
-		if (reward == true) animalReward = getAnimal(); 
+		if (reward == true) {
+			animalReward = getAnimal();
+			frame.getUser().saveCollectible(animalReward);
+			int gold = frame.difficulty();
+			frame.getUser().addMoney(gold);
+		}
 		else animalReward = "penalty";
 		String second = (time == 1) ? " second" : " seconds"; 
 		String text = "<html><body width='" + 200 + "'><h1>Congratulations</h1> <p>You got the " + animalReward + "! <p/> <p>Number of Moves : " + movesMade + "</p><br />" + "<p>Time : " + time + second + "</p></html>";
@@ -169,18 +174,12 @@ public class Message {
 	 */
 	private String getAnimal() {
 		Random random = new Random();
-		int randNum = random.nextInt(1000) + 1;	// gets number from 1 to 100
+		int randNum = random.nextInt(1000 -1 + 1) + 1;	// gets number from 1 to 1000    max-min+1  + min
 		animals.clear();
 		if (randNum == 233) {
-			animals.addAll(Arrays.asList("beetle", "cat", "cow", "crab", "dog", "duck", 
-					"goat", "hen", "horse", "money_pig", "owl", 
-					"pig", "rabbit", "rat", "rooster", 
-					"shark", "sheep", "snake", "turtle"));			
+			animals.addAll(Arrays.asList("money_pig"));			
 		} else if (randNum == 972) {
-			animals.addAll(Arrays.asList("beetle", "cat", "cow", "crab", "dog", "duck", 
-					"goat", "hen", "horse", "rubber_duck", "owl", 
-					"pig", "rabbit", "rat", "rooster", 
-					"shark", "sheep", "snake", "turtle"));
+			animals.addAll(Arrays.asList("rubber_duck"));
 		} else if (randNum >= 1 && randNum <= 500) {
 			animals.addAll(Arrays.asList("cat", "dog", "pig", "rabbit", "rat", "shark"));
 		} else if (randNum > 500 && randNum <= 850) {

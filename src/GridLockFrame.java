@@ -30,6 +30,7 @@ public class GridLockFrame extends JFrame implements Runnable{
 	private Timer time;
 	private int counter;
 	private Box box;
+	private User user;
 
 	/**
 	 * Constructor for GridLockFrame
@@ -37,6 +38,16 @@ public class GridLockFrame extends JFrame implements Runnable{
 	 */
 	public GridLockFrame(Game g) {
 		this.g = g;
+		this.user = new User();
+	}
+	
+	public User getUser() {
+		return this.user;
+	}
+	
+	public int difficulty() {
+		// 5 easy   10 intermediate   20 hard
+		return 0;
 	}
 
 	/*	public Puzzle getPuzzle() {	
@@ -62,13 +73,35 @@ public class GridLockFrame extends JFrame implements Runnable{
 
 		//setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("home1.png").getImage(), new Point(0,0), "cursor"));
 
+		setPreferredSize(new Dimension(MENU_LENGTH, MENU_HEIGHT));
+		setMaximumSize(new Dimension(MENU_LENGTH, MENU_HEIGHT));
+		setMinimumSize(new Dimension(MENU_LENGTH, MENU_HEIGHT));
+		setSize(new Dimension(MENU_LENGTH, MENU_HEIGHT));
+		setFocusable(true);
 		mainMenu();
-
+		//miniGame();
+		
 		pack();
 		setVisible(true);
 		setResizable(false);
-		setLocationRelativeTo(null) ;
+		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	
+	/**
+	 * Changes current frame to show mini-game  
+	 */
+	public void miniGame() {
+		box.removeAll();
+		setFocusable(true);
+		setPreferredSize(new Dimension(MENU_LENGTH, MENU_HEIGHT));
+		setMaximumSize(new Dimension(MENU_LENGTH, MENU_HEIGHT));
+		setMinimumSize(new Dimension(MENU_LENGTH, MENU_HEIGHT));
+		setSize(new Dimension(MENU_LENGTH, MENU_HEIGHT));
+		MiniGame miniGame = new MiniGame(this);
+		box.add(miniGame);
+		setLocationRelativeTo(null);
+		setContentPane(box);
 	}
 
 	/**
@@ -83,7 +116,7 @@ public class GridLockFrame extends JFrame implements Runnable{
 		Menu menu = new Menu(this);
 		box.add(menu);
 		setLocationRelativeTo(null);
-		this.setContentPane(box);
+		setContentPane(box);
 	}
 
 	/**
@@ -98,7 +131,7 @@ public class GridLockFrame extends JFrame implements Runnable{
 		LevelManager levels = new LevelManager(this);
 		box.add(levels);
 		setLocationRelativeTo(null);
-		this.setContentPane(box);
+		setContentPane(box);
 	}
 
 	/**
@@ -114,7 +147,7 @@ public class GridLockFrame extends JFrame implements Runnable{
 		Help help = new Help(this);
 		box.add(help);
 		setLocationRelativeTo(null);
-		this.setContentPane(box);
+		setContentPane(box);
 
 	}
 
@@ -128,18 +161,17 @@ public class GridLockFrame extends JFrame implements Runnable{
 		setSize(new Dimension(FRAME_LENGTH, FRAME_HEIGHT));
 		Box head = new Box(BoxLayout.X_AXIS);
 
-		// adds time spent, moves made and auto finish for the puzzle
+		// adds time spent, moves made for the puzzle
 		JPanel header= new JPanel();
 		header.setMaximumSize(new Dimension(500, 70));
 		header.setPreferredSize(new Dimension(500, 70));
 		header.setMinimumSize(new Dimension(500, 70));
 		header.setOpaque(false);
 		header.add(initMovesLabel());
-		header.add(Box.createRigidArea(new Dimension(125, 70))); // add gap
+//		header.add(Box.createRigidArea(new Dimension(125, 70))); // add gap
 		header.add(initTimeLabel());
 		
 		head.add(header);
-		head.add(autoFinish());
 
 		// creates the interface for the puzzle
 		GridLockGrid grid = new GridLockGrid(getInitialState(), this);
@@ -154,27 +186,6 @@ public class GridLockFrame extends JFrame implements Runnable{
 
 		setLocationRelativeTo(null);
 		setContentPane(box);
-	}
-
-	private JButton autoFinish() {
-		JButton autoFinish = new JButton();
-		autoFinish.setFocusable(false);
-		autoFinish.setBorderPainted(false);
-		ImageIcon next = new ImageIcon(getClass().getResource("autoNext_on.png"));
-		// next = new ImageIcon(getClass().getResource("autoNext_off.png"));
-		Image nextImage = next.getImage();
-		nextImage = nextImage.getScaledInstance(45, 45, Image.SCALE_SMOOTH);
-		next = new ImageIcon(nextImage);
-		autoFinish.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// if have dont have free skip -> give option to buy 
-			}
-		});
-		autoFinish.setIcon(next);
-		autoFinish.setBackground(new Color(51,51,51));
-		autoFinish.setOpaque(false);
-		return autoFinish;
 	}
 
 	/**
@@ -208,6 +219,7 @@ public class GridLockFrame extends JFrame implements Runnable{
 		movesMadeLabel = new JLabel(move);
 		movesMadeLabel.setFont(new Font("Britannic Bold", Font.BOLD, 25));
 		movesMadeLabel.setForeground(new Color(255,153,0));
+		movesMadeLabel.setPreferredSize(new Dimension(300, 70));
 		return movesMadeLabel;
 	}
 

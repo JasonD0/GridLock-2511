@@ -1,5 +1,7 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -10,7 +12,12 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 
 /**
  * Implements the puzzle buttons  
@@ -25,6 +32,7 @@ public class GridButtonsPanel extends JPanel{
 	private JButton menuButton;
 	private JButton resetButton;
 	private JButton deleteButton;
+	private String buyingCost;
 
 	/**
 	 * Constructor for GridButtonsPanel
@@ -77,17 +85,92 @@ public class GridButtonsPanel extends JPanel{
 		deleteButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (grid.checkHelp() == false) {
-					grid.setHelp(true);
-					grid.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("delete1.png").getImage(), new Point(0,0), "cursor"));
-				} else {
-					grid.setHelp(false);
-					grid.setCursor(null);
-
-				}
+				buyOptionPane();
 			}
 		});
 		return deleteButton; 
+	}
+	
+	private void buyOptionPane() {
+		UIManager.put("Panel.background", new Color(51,51,51));
+		UIManager.put("OptionPane.background", new Color(51,51,51));
+
+		// Create level completion message window
+		JOptionPane pane = new JOptionPane();	
+		//pane.setPreferredSize(new Dimension(200, 80));
+		JPanel panel = new JPanel(new BorderLayout());
+		JDialog dialog = pane.createDialog("Buy Penalty-Free Delete Car");
+
+		JLabel message = new JLabel("You have " + frame.getUser().getMoney() + " gold.", SwingConstants.CENTER);
+		message.setFont(new Font(null, Font.BOLD, 20));
+		message.setForeground(Color.WHITE);
+
+		// create buy button 
+		buyingCost = "$150";
+		
+		JButton buy = new JButton();
+		if (frame.getUser().getFreeDeletes() > 0) buyingCost = "$0";
+		buy.setText("Buy " + buyingCost);
+		
+		buy.setFocusable(false);
+		buy.setBorderPainted(false);
+		buy.setOpaque(false);
+		buy.setBackground(new Color(51,51,51));
+		buy.setForeground(Color.WHITE);
+		Image buyImage = new ImageIcon(getClass().getResource("buy.png")).getImage();
+		if (frame.getUser().getMoney() < 150 && frame.getUser().getFreeDeletes() <= 0) buyImage = new ImageIcon(getClass().getResource("buyFalse.png")).getImage();
+		buyImage = buyImage.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+		buy.setIcon(new ImageIcon(buyImage));
+		buy.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (frame.getUser().getMoney() >= 150 || frame.getUser().getFreeDeletes() > 0) {
+					if (buyingCost.equals("$150")) {
+						frame.getUser().setFreeDelete(1);
+						frame.getUser().withdrawMoney(150);
+					}
+					frame.getUser().setFreeDeleteUsed(true);
+					if (grid.checkHelp() == false) {
+						grid.setHelp(true);
+						grid.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("delete1.png").getImage(), new Point(0,0), "cursor"));
+					} else {
+						grid.setHelp(false);
+						grid.setCursor(null);
+					}
+				}
+				JOptionPane.getRootFrame().dispose();
+				dialog.dispose();
+			}
+		});
+		
+		JButton goBack = new JButton("Go Back  "); 
+		goBack.setFocusable(false);
+		goBack.setBorderPainted(false);
+		goBack.setOpaque(false);
+		goBack.setBackground(new Color(51,51,51));
+		goBack.setForeground(Color.WHITE);
+		Image goBackImage = new ImageIcon(getClass().getResource("return.png")).getImage();
+		goBackImage = goBackImage.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+		goBack.setIcon(new ImageIcon(goBackImage));
+		goBack.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.getRootFrame().dispose();
+				dialog.dispose();
+			}
+		});
+		
+		Object options[] = {buy, goBack};
+		
+		// adds message to the message window
+		panel.add(message, BorderLayout.CENTER);
+		panel.setBackground(new Color(51,51,51));
+		panel.setOpaque(false);
+		pane.setMessage(panel);
+		pane.setOptions(options);
+
+		// create window for the message
+		dialog.setVisible(true);
 	}
 
 	/**

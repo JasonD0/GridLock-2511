@@ -15,6 +15,8 @@ public class Menu extends JPanel {
 	JButton start = new JButton();
 	JButton help = new JButton();
 	JButton quit = new JButton();
+	JButton miniGame = new JButton();
+	private String miniGamePng;
 	GridLockFrame game;
 
 	public Menu(GridLockFrame game) {
@@ -38,8 +40,34 @@ public class Menu extends JPanel {
 			}
 		});
 		box.add(start);
+		
+		box.add(Box.createRigidArea(new Dimension(0,3))); // add gap
+		
+		miniGame.setAlignmentX(CENTER_ALIGNMENT);
+		miniGame.setBorderPainted(false);
+		miniGame.setFocusable(false);
+		miniGamePng = "miniGame_";
+		
+		// check mini game accessible
+		if (game.getUser().checkMiniGameAccess() == 1 || game.getUser().checkAllCollectibles() == true) {
+			miniGamePng += "unlocked.png";
+		} else {
+			miniGamePng += "locked.png";
+		}
+		
+		Image miniGameIcon = new ImageIcon(getClass().getResource(miniGamePng)).getImage();
+		miniGameIcon = miniGameIcon.getScaledInstance(114, 67, Image.SCALE_SMOOTH);
+		miniGame.setIcon(new ImageIcon(miniGameIcon));
+		miniGame.setContentAreaFilled(false);
+		miniGame.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (miniGamePng.equals("miniGame_unlocked.png")) game.miniGame();
+			}
+		});
+		box.add(miniGame);
 
-		box.add(Box.createRigidArea(new Dimension(0,8))); // add gap
+		box.add(Box.createRigidArea(new Dimension(0,3))); // add gap
 
 		help.setAlignmentX(CENTER_ALIGNMENT);
 		help.setBorderPainted(false);

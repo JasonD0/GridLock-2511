@@ -76,10 +76,11 @@ public class GridLockGrid extends JPanel {
 		carColor = new HashMap<>();
 		colors = new ArrayList<>(Arrays.asList("black", "blue", "dark_blue", "dark_orange", "dark_pink", "dark_yellow", "emerald", "green", "light_blue", "orange", "pink", "purple", "yellow"));
 		Collections.shuffle(colors);
-		Iterator<String> itr = colors.iterator();
-		for (int i = 0; itr.hasNext(); i++) {
-			carColor.put(i, itr.next());
-			itr.remove();
+		Iterator<String> colorsItr = colors.iterator();
+		// i -> id    
+		for (int i = 0; colorsItr.hasNext(); i++) {
+			carColor.put(i, colorsItr.next());
+			colorsItr.remove();
 		}
 	}
 
@@ -478,9 +479,13 @@ public class GridLockGrid extends JPanel {
 						}
 					}
 				}
-				reward = false;
-				movesMade += 50;
-				frame.increaseTime();
+				if (frame.getUser().checkFreeDeleteUsed() == false) {
+					reward = false;
+					movesMade += 50;
+					frame.increaseTime();
+				} else {
+					frame.getUser().setFreeDelete(-1);
+				}
 				frame.setMovesMade(movesMade);
 				break;
 			}
