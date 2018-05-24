@@ -1,5 +1,0 @@
-import javax.swing.JButton;
-
-class Tile implements JButton{
-	
-}

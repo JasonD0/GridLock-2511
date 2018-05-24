@@ -1,7 +1,0 @@
-import java.awt.event.ActionListener;
-
-import javax.swing.JPanel;
-
-public class Grid extends JPanel implements ActionListener{
-
-}
