@@ -3,6 +3,9 @@ public class Level {
 	private Puzzle current; // current puzzle
 	private Puzzle init; // the starting puzzle can be use for reset or restart
 	
+	/**
+	 * Constructor for the level
+	 */
 	public Level() {
 		int axisX = 6; 
 		int axisY = 6;
@@ -11,18 +14,38 @@ public class Level {
 		
 	}
 	
+	/**
+	 * @pre a Puzzle exist
+	 * @post got the initial Puzzle
+	 * @return Puzzle
+	 */
 	public Puzzle getInit() {
 		return init;
 	}
-
+	
+	/**
+	 * @pre a proper level must have been created 
+	 * @post new Puzzle is set for initial
+	 * @param init
+	 */
 	public void setInit(Puzzle init) {
 		this.init = init;
 	}
 
+	/**
+	 * @pre a Puzzle exist
+	 * @post got the current Puzzle
+	 * @return Puzzle
+	 */
 	public Puzzle getCurrent() {
 		return current;
 	}
 
+	/**
+	 * @pre a proper level must have been created
+	 * @post a new Puzzle is set for current
+	 * @param current
+	 */
 	public void setCurrent(Puzzle current) {
 		this.current = current;
 	}
