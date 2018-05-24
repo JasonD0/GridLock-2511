@@ -36,10 +36,10 @@ public class Message {
 
 	/**
 	 * Constructor for Message 
-	 * @param frame
-	 * @param movesMade
-	 * @param time
-	 * @param reward
+	 * @param frame         link back to the main menu
+	 * @param movesMade     number of moves made to complete the puzzle
+	 * @param time          time taken to complete the puzzle
+	 * @param reward        collectible given to the user 
 	 */
 	public Message(GridLockFrame frame, int movesMade, int time, boolean reward) {
 		this.frame = frame;
@@ -83,7 +83,7 @@ public class Message {
 
 	/**
 	 * Creates text for the level completion message
-	 * @return
+	 * @return    JLabel containing level completion message
 	 */
 	private JLabel messageText() {
 		// Create ribbon image
@@ -113,7 +113,7 @@ public class Message {
 
 	/**
 	 * Creates buttons for the level completion message
-	 * @param pane
+	 * @param pane    pop-up window to contain the buttons
 	 */
 	private void initButtons(JOptionPane pane) {
 		// Create home button
@@ -136,17 +136,18 @@ public class Message {
 	/**
 	 * Create level completion panel buttons functionality
 	 * 	including returning to home page, resetting current level, generate next level and exiting game
-	 * @param pane
-	 * @param text
-	 * @param icon
-	 * @param option
-	 * @return    button
+	 * @param pane      pop-up window that holds the button
+	 * @param text      text of the button
+	 * @param icon      image for the button
+	 * @param option    value determining functionality of the button
+	 * @return          button
 	 */
 	private JButton setOptionPaneButton(JOptionPane pane, String text, ImageIcon icon, int option) {
 		JButton button = new JButton(text);
 		button.setFocusable(false);
 		button.setBorderPainted(false);
 
+		// add functionality to button
 		button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -160,6 +161,7 @@ public class Message {
 			}
 		});
 
+		// set image for button
 		Image iconImage = icon.getImage();
 		iconImage = iconImage.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 		button.setIcon(new ImageIcon(iconImage));

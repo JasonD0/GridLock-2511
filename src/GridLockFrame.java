@@ -34,13 +34,17 @@ public class GridLockFrame extends JFrame implements Runnable{
 
 	/**
 	 * Constructor for GridLockFrame
-	 * @param g
+	 * @param g    back-end and front-end connector
 	 */
 	public GridLockFrame(Game g) {
 		this.g = g;
 		this.user = new User();
 	}
 	
+	/**
+	 * Returns the user class holding a user's information
+	 * @return    user details
+	 */
 	public User getUser() {
 		return this.user;
 	}
@@ -168,7 +172,6 @@ public class GridLockFrame extends JFrame implements Runnable{
 		header.setMinimumSize(new Dimension(500, 70));
 		header.setOpaque(false);
 		header.add(initMovesLabel());
-//		header.add(Box.createRigidArea(new Dimension(125, 70))); // add gap
 		header.add(initTimeLabel());
 		
 		head.add(header);
@@ -190,7 +193,7 @@ public class GridLockFrame extends JFrame implements Runnable{
 
 	/**
 	 * Creates timer for the current puzzle
-	 * @return    time JPanel
+	 * @return    JLabel showing time spend on the current puzzle
 	 */
 	private JLabel initTimeLabel() {
 		if (time != null) time.stop();
@@ -211,8 +214,8 @@ public class GridLockFrame extends JFrame implements Runnable{
 	}
 
 	/**
-	 * Creates JPanel to indicate number of moves made for the current puzzle
-	 * @return    moves JPanel
+	 * Creates JLabel to indicate number of moves made for the current puzzle
+	 * @return    JLabel showing number of moves made
 	 */
 	private JLabel initMovesLabel() {
 		String move = "Moves  0";
@@ -225,7 +228,7 @@ public class GridLockFrame extends JFrame implements Runnable{
 
 	/**
 	 * Updates number of moves made for current puzzle
-	 * @param movesMade
+	 * @param movesMade    number of moves made by the user of the current puzzle
 	 */
 	public void setMovesMade(int movesMade) {
 		String move = "Moves  " + String.valueOf(movesMade);

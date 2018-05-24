@@ -25,8 +25,12 @@ import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 
+/**
+ * Implements the main part of the mini game  
+ * Handles user movement and shooting
+ */
+
 public class MiniGame extends JPanel implements KeyListener, ActionListener {
-	
 	private Timer actionTimer = new Timer(10, this);	// activates action performed
 	private Timer shootTimer;	
 	private Timer gameLimit;
@@ -39,7 +43,12 @@ public class MiniGame extends JPanel implements KeyListener, ActionListener {
 	private JLabel time;
 	private int timeCounter;
 	private GridLockFrame frame;
+	private Image car;
 	
+	/**
+	 * Constructor for MiniGame
+	 * @param frame    link back to the main menu
+	 */
 	public MiniGame(GridLockFrame frame) {
 		this.x = 20;
 		this.y = 60;
@@ -54,14 +63,41 @@ public class MiniGame extends JPanel implements KeyListener, ActionListener {
 		requestFocus();
 		addKeyListener(this);
 		initMiniGame();
+		showInstructions();
 	}
 	
+	/**
+	 * Shows instructions for the mini game
+	 */
+	public void showInstructions() {
+		UIManager.put("Panel.background", new Color(51,51,51));
+		UIManager.put("OptionPane.background", new Color(51,51,51));
+
+		String instructions = "<html><p>Use up/down arrow keys to move your car</p>  <p>Press space to shoot projectile</p>  <p>Each projectile hit gives 2 Gold</p></html>";
+		
+		JOptionPane pane = new JOptionPane();	
+		pane.setPreferredSize(new Dimension(450, 150));
+		JDialog dialog = pane.createDialog("Mini Game Instructions");
+		JLabel message = new JLabel(instructions, SwingConstants.CENTER);
+		message.setFont(new Font(null, Font.BOLD, 20));
+		message.setForeground(Color.WHITE);
+		pane.setMessage(message);
+		dialog.setVisible(true);
+	}
+	
+	/**
+	 * Sets up time countdown, gold earned and the shooting of cogs
+	 */
 	private void initMiniGame() {
+		car = new ImageIcon(getClass().getResource("miniGame_car.png")).getImage();
+		car = car.getScaledInstance(50, 30, Image.SCALE_SMOOTH);
+		
 		this.cogs = new ArrayList<>();
 		setLayout(new BorderLayout());
 		headerPanel = new JPanel();
 		headerPanel.setOpaque(false);
 		
+		// create time countdown for the mini game
 		time = new JLabel("Time Remaining: " + timeCounter);
 		time.setFont(new Font("Britannic Bold", Font.BOLD, 30));
 		time.setForeground(new Color(255,153,0));
@@ -77,6 +113,7 @@ public class MiniGame extends JPanel implements KeyListener, ActionListener {
 			}
 		});
 		
+		// create gold counter for the mini game
 		goldMade = new JLabel(" Gold Made: " + gold);
 		goldMade.setPreferredSize(new Dimension(300, 40));
 		goldMade.setFont(new Font("Britannic Bold", Font.BOLD, 30));
@@ -86,10 +123,13 @@ public class MiniGame extends JPanel implements KeyListener, ActionListener {
 		headerPanel.add(time);
 		headerPanel.add(Box.createRigidArea(new Dimension(100, 0)));	// add gap
 		add(headerPanel, BorderLayout.NORTH);
-		
 		setBackground(new Color(51,51,51));
 		add(pig, BorderLayout.EAST);
+		
+		// activator for repainting 
 		actionTimer.start();
+		
+		// create delay after each shot 
 		shootTimer = new Timer(50, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -100,10 +140,17 @@ public class MiniGame extends JPanel implements KeyListener, ActionListener {
 		});
 	}
 
+	/**
+	 * Start shooting
+	 */
 	private void shoot() {
 		shootTimer.start();
 	}
 	
+	/**
+	 * Create pop-up message indicating end of mini game
+	 * Shows gold earned 
+	 */
 	private void endMiniGame() {
 		frame.getUser().addMoney(gold);
 		UIManager.put("Panel.background", new Color(51,51,51));
@@ -111,10 +158,10 @@ public class MiniGame extends JPanel implements KeyListener, ActionListener {
 
 		// Create level completion message window
 		JOptionPane pane = new JOptionPane();	
-		//pane.setPreferredSize(new Dimension(200, 80));
 		JPanel panel = new JPanel(new BorderLayout());
 		JDialog dialog = pane.createDialog("Mini Game Completed");
 
+		// Create text for the window
 		JLabel message = new JLabel("You won " + gold + " gold!", SwingConstants.CENTER);
 		message.setFont(new Font(null, Font.BOLD, 20));
 		message.setForeground(Color.WHITE);
@@ -140,21 +187,26 @@ public class MiniGame extends JPanel implements KeyListener, ActionListener {
 		
 		Object options[] = {home};
 		
-		// adds message to the message window
+		// adds message and home button to the message window
 		panel.add(message, BorderLayout.CENTER);
 		panel.setBackground(new Color(51,51,51));
 		panel.setOpaque(false);
 		pane.setMessage(panel);
 		pane.setOptions(options);
 
-		// create window for the message
 		dialog.setVisible(true);
 	}
 	
+	/**
+	 * Handles user input
+	 * @param e    user keyboard input
+	 */
 	@Override
 	public void keyReleased(KeyEvent e) {
+		// remove the mini game ticket from user 
 		if (frame.getUser().checkAllCollectibles() == true) frame.getUser().resetCollectibles(); 
 		else frame.getUser().setMiniGame(0);
+		
 		// shoot
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 			shoot();
@@ -169,24 +221,35 @@ public class MiniGame extends JPanel implements KeyListener, ActionListener {
 		}
 	}
 	
+	/**
+	 * Manages the state of the mini game 
+	 * @param e     details of action performed
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		// focuses window so user can use keys
 		if (timeCounter == 60) requestFocusInWindow();
+		
+		// prevent user from moving above the game window
 		if (y < 70) {
 			velY = 6;
 			y = 70;
 		}
+		// prevent user from moving below the game window
 		if (y > 610) {
 			velY = -6;
 			y = 610;
 		}
 		y += velY;
+		
+		// remove cogs not in frame and add gold for each cog hitting the pig
 		Iterator<Cog> cogsItr = cogs.iterator();
 		while (cogsItr.hasNext()) {
 			Cog cog = cogsItr.next();
 			if (cog.inFrame() == false) {
 				cogsItr.remove();
 			} else {
+				// give user gold if cog hits the pig
 				if (cog.getBoundary(15).intersects(pig.getBoundary())) {
 					cog.tmpRemove();
 					this.gold += 2;
@@ -199,12 +262,14 @@ public class MiniGame extends JPanel implements KeyListener, ActionListener {
 		repaint();
 	}
 	
+	/**
+	 * Draws all components of the mini game after every repaint() call
+	 */
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.setColor(new Color(255,153,0));
-		g.fillRect(x, y, 50, 30);
 		Graphics2D g2 = (Graphics2D)g.create();
+		g2.drawImage(car, x, y, null);
 		for (int i = 0; i < cogs.size(); i++) {
 			Cog cog = cogs.get(i);
 			Image cogImage = cog.getImage();
@@ -212,8 +277,13 @@ public class MiniGame extends JPanel implements KeyListener, ActionListener {
 		}
 	}
 
+	/**
+	 * Starts game when any key pressed
+	 */
 	@Override
-	public void keyPressed(KeyEvent e) { if (timeCounter != 0) gameLimit.start(); }
+	public void keyPressed(KeyEvent e) { 
+		if (timeCounter != 0) gameLimit.start(); 
+	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {}

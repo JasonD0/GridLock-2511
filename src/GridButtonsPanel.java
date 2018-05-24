@@ -36,8 +36,8 @@ public class GridButtonsPanel extends JPanel{
 
 	/**
 	 * Constructor for GridButtonsPanel
-	 * @param frame
-	 * @param grid
+	 * @param frame    link back to the main menu and puzzle's time and moves updater
+	 * @param grid     the window of the puzzle gui
 	 */
 	public GridButtonsPanel(GridLockFrame frame, GridLockGrid grid) {
 		this.frame = frame;
@@ -91,45 +91,54 @@ public class GridButtonsPanel extends JPanel{
 		return deleteButton; 
 	}
 	
+	/**
+	 * Creates pop-up shop allowing user to buy a free delete
+	 */
 	private void buyOptionPane() {
 		UIManager.put("Panel.background", new Color(51,51,51));
 		UIManager.put("OptionPane.background", new Color(51,51,51));
 
-		// Create level completion message window
+		// Create shop window
 		JOptionPane pane = new JOptionPane();	
-		//pane.setPreferredSize(new Dimension(200, 80));
 		JPanel panel = new JPanel(new BorderLayout());
 		JDialog dialog = pane.createDialog("Buy Penalty-Free Delete Car");
 
+		// Tells user amount of gold they have
 		JLabel message = new JLabel("You have " + frame.getUser().getMoney() + " gold.", SwingConstants.CENTER);
 		message.setFont(new Font(null, Font.BOLD, 20));
 		message.setForeground(Color.WHITE);
 
-		// create buy button 
+		// create buy button
 		buyingCost = "$150";
-		
 		JButton buy = new JButton();
 		if (frame.getUser().getFreeDeletes() > 0) buyingCost = "$0";
 		buy.setText("Buy " + buyingCost);
-		
+
 		buy.setFocusable(false);
 		buy.setBorderPainted(false);
 		buy.setOpaque(false);
 		buy.setBackground(new Color(51,51,51));
 		buy.setForeground(Color.WHITE);
+		
 		Image buyImage = new ImageIcon(getClass().getResource("buy.png")).getImage();
-		if (frame.getUser().getMoney() < 150 && frame.getUser().getFreeDeletes() <= 0) buyImage = new ImageIcon(getClass().getResource("buyFalse.png")).getImage();
+		if (frame.getUser().getMoney() < 150 && frame.getUser().getFreeDeletes() <= 0) {
+			buyImage = new ImageIcon(getClass().getResource("buyFalse.png")).getImage();
+			buy.setContentAreaFilled(false);
+		}
 		buyImage = buyImage.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
 		buy.setIcon(new ImageIcon(buyImage));
+		
 		buy.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				// allow user to buy if they have sufficient funds/have free deletes
 				if (frame.getUser().getMoney() >= 150 || frame.getUser().getFreeDeletes() > 0) {
 					if (buyingCost.equals("$150")) {
 						frame.getUser().setFreeDelete(1);
 						frame.getUser().withdrawMoney(150);
 					}
 					frame.getUser().setFreeDeleteUsed(true);
+					// sets cursor image 
 					if (grid.checkHelp() == false) {
 						grid.setHelp(true);
 						grid.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new ImageIcon("delete1.png").getImage(), new Point(0,0), "cursor"));
@@ -142,16 +151,20 @@ public class GridButtonsPanel extends JPanel{
 				dialog.dispose();
 			}
 		});
-		
+	
+		// Create go back button 
 		JButton goBack = new JButton("Go Back  "); 
 		goBack.setFocusable(false);
 		goBack.setBorderPainted(false);
 		goBack.setOpaque(false);
 		goBack.setBackground(new Color(51,51,51));
 		goBack.setForeground(Color.WHITE);
+		
 		Image goBackImage = new ImageIcon(getClass().getResource("return.png")).getImage();
 		goBackImage = goBackImage.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
 		goBack.setIcon(new ImageIcon(goBackImage));
+		
+		// redirects user back to the current puzzle
 		goBack.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -169,13 +182,12 @@ public class GridButtonsPanel extends JPanel{
 		pane.setMessage(panel);
 		pane.setOptions(options);
 
-		// create window for the message
 		dialog.setVisible(true);
 	}
 
 	/**
 	 * Creates button that switches music on/off 
-	 * @return   button 
+	 * @return   button
 	 */
 	private JButton newMusicButton() {
 		// create button

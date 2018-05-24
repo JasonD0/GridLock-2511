@@ -15,10 +15,13 @@ import java.util.Set;
 public class User {
 	private Set<String> collectibles;
 	private int gold;
-	private int freeDeletes;	// prob remove free freeDelete -> put duck gives 3 free deletes
+	private int freeDeletes;	
 	private int miniGame;
 	private boolean freeDeleteUsed = false;
 	
+	/**
+	 * Constructor for User
+	 */
 	public User() {
 		this.collectibles = new HashSet<>();
 		this.gold = 0;
@@ -27,56 +30,108 @@ public class User {
 		getUserInfo();
 	}
 	
+	/**
+	 * Returns total gold count of the user
+	 * @return    user's total gold
+	 */
 	public int getMoney() {
 		return gold;
 	}
 	
+	/**
+	 * Indicates whether a free delete has been used
+	 * User will get no penalty
+	 * @param tf    indicates whether user has used a delete
+	 */
 	public void setFreeDeleteUsed(boolean tf) {
 		this.freeDeleteUsed = tf;
 	}
 	
+	/**
+	 * Checks if a free delete has been used
+	 * @return    true if a delete has been used
+	 * 			  false otherwise
+	 */
 	public boolean checkFreeDeleteUsed() {
 		return this.freeDeleteUsed;
 	}
 	
-	// call addMoney after any method that you want to save info -> only addmoney will updateuserinfo
+	/**
+	 * Give user gold
+	 * @param value    gold given to the user
+	 */
 	public void addMoney(int value) {
 		this.gold += value;
 		updateUserInfo();
 	}
 	
-	// only called if enough money
+	/**
+	 * @precondition    user has enough gold to buy
+	 * Withdraw money from user gold bank
+	 * @param value     amount of gold to be withdrawn
+	 */
 	public void withdrawMoney(int value) {
 		this.gold -= value;
 		updateUserInfo();
 	}
 	
+	/**
+	 * Update amount of free deletes a user has
+	 * @param i    amount of deletes used or given to the user
+	 */
 	public void setFreeDelete(int i) {
 		this.freeDeletes += i;
 		updateUserInfo();
 	}
 	
+	/**
+	 * Returns number of free deletes the user has
+	 * @return    number of free deletes
+	 */
 	public int getFreeDeletes() {
 		return this.freeDeletes;
 	}
 	
+	/**
+	 * Check if user has collected all animal rewards (excluding money_pig and rubber_duck)
+	 * @return    true if user has collected all animal rewards
+	 *     	      false otherwise
+	 */
 	public boolean checkAllCollectibles() {
 		return collectibles.size() == 18;
 	}
 	
+	/**
+	 * Indicates if user has access to the mini game
+	 * @param tf    indicates whether user has access to the mini game
+	 */
 	public void setMiniGame(int tf) {
 		this.miniGame = tf;
 	}
 	
+	/**
+	 * Checks if user has access to the mini game
+	 * @return    true if user has access to mini game
+	 *  	      false otherwise
+	 */
 	public int checkMiniGameAccess() {
 		return this.miniGame;
 	}
 	
+	/**
+	 * Remove all collectibles 
+	 */
 	public void resetCollectibles() {
 		this.collectibles.clear();
 		updateUserInfo();
 	}
 	
+	/**
+	 * Add a collectible to the user's collectibles (exlcuding money_pig and rubber_duck)
+	 * Money pig will allow access to mini game
+	 * Rubber duck will give user free deletes
+	 * @param animalReward    collectible received 
+	 */
 	public void saveCollectible(String animalReward) {
 		if (animalReward.equals("money_pig")) {
 			this.miniGame = 1;
@@ -90,11 +145,17 @@ public class User {
 		updateUserInfo();
 	}
 	
-	// maybe page for user info -> colletible progress, etc
+	/**
+	 * Returns all of user's collectibles
+	 * @return    set of user's collectibles
+	 */
 	public Set<String> getCollectibles() {
 		return collectibles;
 	}
 	
+	/**
+	 * Write to file the updated user information
+	 */
 	private void updateUserInfo() {
 
 		PrintWriter writer = null;
@@ -113,6 +174,9 @@ public class User {
 		}
 	}
 	
+	/**
+	 * Gets user information from file
+	 */
 	private void getUserInfo() {
 		File input = new File("user_info.txt");
 		try {
@@ -146,11 +210,4 @@ public class User {
             if (sc != null) sc.close();
         }
 	}
-	
-	
-	
-	
-	
-	
-	
 }

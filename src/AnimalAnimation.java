@@ -70,7 +70,10 @@ public class AnimalAnimation extends JLabel{
 		timer.start();
 		setPreferredSize(new Dimension(130, 140));
 	}
-
+	
+	/**
+	 * Draws the animal every time repaint() is called
+	 */
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
