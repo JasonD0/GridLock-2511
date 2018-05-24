@@ -1,4 +1,0 @@
-- rabbit
-Gold: 0
-FreeDelete: 0
-MiniGameAccess: 1
