@@ -6,24 +6,50 @@ public class Puzzle {
 	private ArrayList<Car> carList;
 	//private InGameObject redCar;
 	
+	/**
+	 * Constructor for the puzzle
+	 * @param sizeX
+	 * @param sizeY
+	 */
 	public Puzzle(int sizeX, int sizeY) {
 		this.gridState = new int[sizeY][sizeX];
 		this.carList = new ArrayList<Car>();
 		
 	}
-	
+	/**
+	 * @pre an existing 2D array 
+	 * @post retrieve 2D array of int
+	 * @return int[][]
+	 */
 	public int[][] getGridState() {
 		return gridState;
 	}
+	/**
+	 * @pre a value or null can be there
+	 * @post new 2D array have been set
+	 */
 	public void setGridState(int[][] gridState) {
 		this.gridState = gridState;
 	}
+	/**
+	 * @pre an existing array list of car 
+	 * @post retrieve the arrayList
+	 * @return ArrayList<Car>
+	 */
 	public ArrayList<Car> getCarList() {
 		return carList;
 	}
+	/**
+	 * @pre a value or null can be there
+	 * @post new arrayList of car have been set
+	 */
 	public void setCarList(ArrayList<Car> carList) {
 		this.carList = carList;
 	}
+	/**
+	 * @pre there must be an existing arrayList of car
+	 * @post a car is added into the car List
+	 */
 	
 	public void addCars(Car newCar) {
 		if(!carList.contains(newCar)) {
@@ -31,12 +57,22 @@ public class Puzzle {
 		}
 		
 	}
+	/**
+	 * @pre array list of car existed
+	 * @post a new array list of car 
+	 * @return ArrayList<Car>
+	 */
 	
 	public ArrayList<Car> cloningCar() {
 		ArrayList<Car> clone = new ArrayList<Car>(carList);
 		return clone;
 	}
-	
+	/**
+	 * @pre an existing and proper Puzzle is calling this function
+	 * @post a new Puzzle with same details as the old one
+	 * @return a new Puzzle 
+	 * @param difficulty
+	 */
 	public Puzzle clonePuzzle(String difficulty) {
 		Puzzle p = new Puzzle(6,6);
 		p.carList = new ArrayList<Car>(carList);
@@ -75,6 +111,11 @@ public class Puzzle {
 	
 		return p;
 	}
+	/**
+	 * @pre a Puzzle must exist
+	 * @post Puzzle with a 2D array information is create
+	 * @param difficulty
+	 */
 	public void initGridState(String difficulty) {
 		if (difficulty.equals("easy")) {
 			gridState = new int[][] {
