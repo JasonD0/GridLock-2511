@@ -37,7 +37,7 @@ public class Puzzle {
 		return clone;
 	}
 	
-	public Puzzle clonePuzzle() {
+	public Puzzle clonePuzzle(String difficulty) {
 		Puzzle p = new Puzzle(6,6);
 		p.carList = new ArrayList<Car>(carList);
 		if (difficulty.equals("easy")) {
@@ -75,7 +75,7 @@ public class Puzzle {
 	
 		return p;
 	}
-	public void initGridState() {
+	public void initGridState(String difficulty) {
 		if (difficulty.equals("easy")) {
 			gridState = new int[][] {
 				{ 1,  1, -1, -1, -1,  8},
