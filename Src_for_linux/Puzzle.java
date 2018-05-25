@@ -40,14 +40,39 @@ public class Puzzle {
 	public Puzzle clonePuzzle() {
 		Puzzle p = new Puzzle(6,6);
 		p.carList = new ArrayList<Car>(carList);
-		p.gridState = new int[][] {
-			{ 1,  1, -1, -1, -1,  8},
-			{ 2, -1, -1,  5, -1,  8},
-			{ 2,  4,  4,  5, -1,  8},
-			{ 2, -1, -1,  5, -1, -1},
-			{ 3, -1, -1, -1,  7,  7},
-			{ 3, -1,  6,  6,  6, -1}
-		};
+		if (difficulty.equals("easy")) {
+			p.gridState = new int[][] {
+				{ 1,  1, -1, -1, -1,  8},
+				{ 2, -1, -1,  5, -1,  8},
+				{ 2,  4,  4,  5, -1,  8},
+				{ 2, -1, -1,  5, -1, -1},
+				{ 3, -1, -1, -1,  7,  7},
+				{ 3, -1,  6,  6,  6, -1}
+			};
+		}
+		if (difficulty.equals("intermediate")) {
+			p.gridState = new int[][] {
+				{ 1, -1, -1, 10, 10, 10},
+				{ 1, -1, -1, 11, -1,  9},
+				{ 2,  2, -1, 11,  8,  9},
+				{ 3,  3,  3,  5,  8,  9},
+				{-1, -1,  5, -1,  7,  7},
+				{ 4,  4,  5,  6,  6, -1}
+			};
+		}
+		if (difficulty.equals("hard")) {
+			p.gridState = new int[][] {
+				{-1, -1, -1, -1, -1, -1},
+				{-1, -1, -1, -1, -1, -1},
+				{-1,  3,  3,  5, -1, -1},
+				{-1,  2,  2,  5, -1,  4},
+				{-1,  1, -1,  5, -1,  4},
+				{-1,  1,  6,  6, -1,  4}
+			};
+			
+
+		}
+	
 		return p;
 	}
 	public void initGridState() {
