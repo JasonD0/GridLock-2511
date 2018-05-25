@@ -98,6 +98,7 @@ public class GridButtonsPanel extends JPanel{
 		UIManager.put("Panel.background", new Color(51,51,51));
 		UIManager.put("OptionPane.background", new Color(51,51,51));
 		UIManager.put("OptionPane.minimumSize", new Dimension(300, 90));
+
 		// Create shop window
 		JOptionPane pane = new JOptionPane();	
 		JPanel panel = new JPanel(new BorderLayout());
@@ -187,7 +188,7 @@ public class GridButtonsPanel extends JPanel{
 		panel.setOpaque(false);
 		pane.setMessage(panel);
 		pane.setOptions(options);
-
+		
 		dialog.setVisible(true);
 	}
 
@@ -287,7 +288,7 @@ public class GridButtonsPanel extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!frame.getDifficulty().equals("retry")) frame.getUser().setFreeDeleteUsed(true);
-				frame.newPuzzlePanel("reset");	
+				frame.newPuzzlePanel(frame.getDifficulty());	
 				frame.stopTimer();
 			}
 		});

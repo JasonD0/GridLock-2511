@@ -65,7 +65,7 @@ public class GridLockGrid extends JPanel {
 		pane.add(new Grid());
 		add(pane);
 		setCarColors();
-		initial.initGridState();
+		initial.initGridState(frame.getDifficulty());
 		carList = initial.getCarList();
 	}
 

@@ -63,7 +63,7 @@ public class Message {
 
 		JLabel message = messageText();
 		initButtons(pane);
-		Object[] options = {home, retry, next, exit};
+		Object[] options = {home, retry, /*next,*/ exit};
 
 		// adds message and reward animation to the message window
 		panel.add(message, BorderLayout.WEST);
@@ -160,8 +160,8 @@ public class Message {
 				pane.setValue(option);
 				switch (option) {
 				case 0: frame.mainMenu(); break;
-				case 1: frame.newPuzzlePanel("retry"); break;
-				case 2: frame.newPuzzlePanel(frame.getNextLevelDifficulty()); break;
+				case 1: frame.newPuzzlePanel(frame.getDifficulty()); break;
+				//case 2: frame.newPuzzlePanel(frame.getNextLevelDifficulty()); break;
 				case 3: frame.dispose(); break;
 				}
 			}

@@ -107,7 +107,7 @@ public class GridLockFrame extends JFrame implements Runnable {
 	 * @return    initial state of puzzle
 	 */
 	public Puzzle getInitialState() {
-		return this.g.getLevel().getInit().clonePuzzle();
+		return this.g.getLevel().getInit().clonePuzzle(getDifficulty());
 	}
 
 	/**
@@ -115,9 +115,9 @@ public class GridLockFrame extends JFrame implements Runnable {
 	 * @param difficulty    difficulty of next puzzle
 	 * @return              puzzle of given difficulty
 	 */
-	public Puzzle getNextLevel(String difficulty) {
+	public Puzzle getNextLevel(String difficulty) { // "easy"  "intermediate"  "hard" 
 		// getLevel -> takes in param -> easy/intermediate/hard (?)
-		return this.g.getLevel().getInit().clonePuzzle();
+		return this.g.getLevel().getInit().clonePuzzle(getDifficulty());
 	}
 
 	/**
@@ -141,29 +141,10 @@ public class GridLockFrame extends JFrame implements Runnable {
 
 		head.add(header);
 
-		if (!levelDifficulty.equals("retry")) {
-			setNextLevel(levelDifficulty);
-		}
 		// creates the interface for the puzzle of given difficulty
-		GridLockGrid grid = null;
-		switch (levelDifficulty) {
-		case "reset":	
-			grid = new GridLockGrid(getInitialState(), this);
-			levelDifficulty = getDifficulty();
-			break;
-		case "easy": 
-			grid = new GridLockGrid(getNextLevel(levelDifficulty), this);
-			break;
-		case "intermediate": 
-			grid = new GridLockGrid(getNextLevel(levelDifficulty), this);
-			break;
-		case "hard": 
-			grid = new GridLockGrid(getNextLevel(levelDifficulty), this);
-			break;
-		default: // retry
-			grid = new GridLockGrid(getInitialState(), this);
-		}
 		setDifficulty(levelDifficulty);
+		GridLockGrid grid  = new GridLockGrid(getInitialState(), this);
+		
 
 		grid.setPreferredSize(new Dimension(638, 642));
 		grid.setMaximumSize(new Dimension(638, 642));
