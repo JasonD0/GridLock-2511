@@ -13,7 +13,10 @@ public class LevelManager extends JPanel {
     JButton Return = new JButton();
 
     GridLockFrame game;
-
+    /**
+     * Constructer for LevelManager class
+     * @param game
+     */
     public LevelManager(GridLockFrame game) {
         this.game = game;
         setLayout(null);
@@ -77,6 +80,11 @@ public class LevelManager extends JPanel {
         add(Return);
     }
 
+    /**
+     * Drawing the level management menu on the screen
+     * @pre the proper graphics is there to be painted
+     * @post the level manager menu shows up
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

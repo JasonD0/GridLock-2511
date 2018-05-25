@@ -12,6 +12,18 @@ import javax.swing.*;
  */
 
 public class Help extends JPanel {
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+    GridLockFrame game;
+    JTextPane helpText = new JTextPane();
+    JButton Return = new JButton();
+    
+    /**
+     * Constructor for help box
+     * @param game
+=======
+>>>>>>> Stashed changes
     private GridLockFrame game;
     private JTextPane helpText = new JTextPane();
     private JButton Return = new JButton();
@@ -20,6 +32,10 @@ public class Help extends JPanel {
      * Constructor for help
      * Creates the help page containing the instructions
      * @param game    link to the main menu
+<<<<<<< Updated upstream
+=======
+>>>>>>> origin/master
+>>>>>>> Stashed changes
      */
     public Help(GridLockFrame game) {
         this.game = game;
@@ -64,9 +80,23 @@ public class Help extends JPanel {
         setOpaque(false);
     }
 
+<<<<<<< Updated upstream
     /**
      * draws the background
      * @param g
+=======
+<<<<<<< HEAD
+    	
+    /**
+     * Drawing the help menu on the screen
+     * @pre the proper graphics is there to be painted
+     * @post the help menu shows up
+=======
+    /**
+     * draws the background
+     * @param g
+>>>>>>> origin/master
+>>>>>>> Stashed changes
      */
     @Override
     public void paintComponent(Graphics g) {
