@@ -142,6 +142,6 @@ public class Menu extends JPanel {
 	 * @param g
 	 */
 	public void draw(Graphics g) {
-		g.drawImage(new ImageIcon("MenuComplete.png").getImage(), 0, 0, 696, 697, this);
+		g.drawImage(new ImageIcon("menugif1.gif").getImage(), 0, 0, 696, 697, this);
 	}
 }
