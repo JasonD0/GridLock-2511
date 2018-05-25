@@ -140,6 +140,8 @@ public class GridButtonsPanel extends JPanel{
 						frame.getUser().withdrawMoney(150);
 					}
 					frame.getUser().setFreeDeleteUsed(true);
+				} else {
+					frame.getUser().setFreeDeleteUsed(false);
 				}
 				// sets cursor image 
 				if (grid.checkHelp() == false) {
@@ -283,6 +285,7 @@ public class GridButtonsPanel extends JPanel{
 		resetButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if (!frame.getDifficulty().equals("retry")) frame.getUser().setFreeDeleteUsed(true);
 				frame.newPuzzlePanel("reset");	
 				frame.stopTimer();
 			}
