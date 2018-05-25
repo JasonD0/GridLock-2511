@@ -101,7 +101,6 @@ public class Message {
 		} else {
 			animalReward = "penalty";
 			gold = 0;
-			
 		}
 		String second = (time == 1) ? " second" : " seconds"; 
 		String text = "<html><body width='" + 200 + "'><h1>Congratulations</h1> "
@@ -162,7 +161,7 @@ public class Message {
 				switch (option) {
 				case 0: frame.mainMenu(); break;
 				case 1: frame.newPuzzlePanel("retry"); break;
-				case 2: frame.newPuzzlePanel(frame.getDifficulty()); break;
+				case 2: frame.newPuzzlePanel(frame.getNextLevelDifficulty()); break;
 				case 3: frame.dispose(); break;
 				}
 			}

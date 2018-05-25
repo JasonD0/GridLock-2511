@@ -32,6 +32,7 @@ public class GridLockFrame extends JFrame implements Runnable {
 	private Box box;
 	//private User user;
 	private String difficulty;
+	private String nextLevelDifficulty;
 
 	/*
 	 * public Puzzle getPuzzle() { return this.g.getLevel().getInit(); }
@@ -91,6 +92,14 @@ public class GridLockFrame extends JFrame implements Runnable {
 	public void setDifficulty(String difficulty) {
 		this.difficulty = difficulty;
 	}
+	
+	public void setNextLevel(String difficulty) {
+		this.nextLevelDifficulty = difficulty;
+	}
+	
+	public String getNextLevelDifficulty() {
+		return this.nextLevelDifficulty;
+	}
 
 	/**
 	 * Returns initial state of the current puzzle
@@ -132,6 +141,9 @@ public class GridLockFrame extends JFrame implements Runnable {
 
 		head.add(header);
 
+		if (!levelDifficulty.equals("retry")) {
+			setNextLevel(levelDifficulty);
+		}
 		// creates the interface for the puzzle of given difficulty
 		GridLockGrid grid = null;
 		switch (levelDifficulty) {
