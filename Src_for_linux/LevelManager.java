@@ -27,7 +27,7 @@ public class LevelManager extends JPanel {
         Easy.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	game.newPuzzlePanel();
+            	game.newPuzzlePanel("easy");
             }
         });
         Easy.setBounds(320,150,85,40);
@@ -42,7 +42,7 @@ public class LevelManager extends JPanel {
         Intermeidate.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	game.newPuzzlePanel();
+            	game.newPuzzlePanel("intermediate");
             }
         });
         Intermeidate.setBounds(285,250,150,42);
@@ -57,7 +57,7 @@ public class LevelManager extends JPanel {
         Hard.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	game.newPuzzlePanel();	
+            	game.newPuzzlePanel("hard");	
             }		
         });
         add(Hard);

@@ -30,7 +30,7 @@ public class Cog {
 	 * Creates image for the cog
 	 */
 	private void initCog() {
-		cogImage = new ImageIcon(getClass().getResource("cog.png")).getImage();
+		cogImage = new ImageIcon(getClass().getResource("/icons/cog.png")).getImage();
 		cogImage = cogImage.getScaledInstance(cogLength, cogLength, Image.SCALE_SMOOTH);
 	}
 	

@@ -252,7 +252,7 @@ public class MiniGame extends JPanel implements KeyListener, ActionListener {
 				// give user gold if cog hits the pig
 				if (cog.getBoundary(15).intersects(pig.getBoundary())) {
 					cog.tmpRemove();
-					this.gold += 2;
+					if (timeCounter != 0) this.gold += 2;
 					goldMade.setText("Gold Made: " + gold);
 				} else {
 					cog.move();					

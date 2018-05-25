@@ -89,7 +89,7 @@ public class MiniGame extends JPanel implements KeyListener, ActionListener {
 	 * Sets up time countdown, gold earned and the shooting of cogs
 	 */
 	private void initMiniGame() {
-		car = new ImageIcon(getClass().getResource("miniGame_car.png")).getImage();
+		car = new ImageIcon(getClass().getResource("/icons/miniGame_car.png")).getImage();
 		car = car.getScaledInstance(50, 30, Image.SCALE_SMOOTH);
 		
 		this.cogs = new ArrayList<>();
@@ -173,7 +173,7 @@ public class MiniGame extends JPanel implements KeyListener, ActionListener {
 		home.setOpaque(false);
 		home.setBackground(new Color(51,51,51));
 		home.setForeground(Color.WHITE);
-		Image homeImage = new ImageIcon(getClass().getResource("home1.png")).getImage();
+		Image homeImage = new ImageIcon(getClass().getResource("/buttons/home1.png")).getImage();
 		homeImage = homeImage.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
 		home.setIcon(new ImageIcon(homeImage));
 		home.addActionListener(new ActionListener() {
@@ -252,7 +252,7 @@ public class MiniGame extends JPanel implements KeyListener, ActionListener {
 				// give user gold if cog hits the pig
 				if (cog.getBoundary(15).intersects(pig.getBoundary())) {
 					cog.tmpRemove();
-					this.gold += 2;
+					if (timeCounter != 0) this.gold += 2;
 					goldMade.setText("Gold Made: " + gold);
 				} else {
 					cog.move();					

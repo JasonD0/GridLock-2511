@@ -1,0 +1,7 @@
+- horse
+- cow
+- dog
+- pig
+Gold: 50
+FreeDelete: 0
+MiniGameAccess: 0

@@ -29,9 +29,7 @@ public class AnimalAnimation extends JLabel{
 	 * @param animalReward    animal name of the reward
 	 */
 	public AnimalAnimation(String animalReward) {
-		//animal = ImageIO.read(new File("pig.png"));	// try if below doesnt work on mac/unix
-
-		ImageIcon animalIcon = new ImageIcon(getClass().getResource("animals/" + animalReward + ".png"));
+		ImageIcon animalIcon = new ImageIcon(getClass().getResource("/animals/" + animalReward + ".png"));
 		animal = animalIcon.getImage();
 		
 		timer = new Timer(50, new ActionListener() {

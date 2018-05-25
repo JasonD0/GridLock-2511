@@ -9,6 +9,8 @@ public class Game {
 		Game gridLockGame = new Game();
 		gridLockGame.level = new Level();
 		
+		gridLockGame.user = new User();
+		
 		GridLockFrame gridLock = new GridLockFrame(gridLockGame);
 		SwingUtilities.invokeLater(gridLock);
 		
@@ -26,6 +28,7 @@ public class Game {
 		return user;
 	}
 
+	
 	public void setUser(User user) {
 		this.user = user;
 	}

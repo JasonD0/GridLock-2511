@@ -55,7 +55,7 @@ public class GridLockGrid extends JPanel {
 		movesMade = 0;
 
 		// add grid background
-		ImageIcon background = new ImageIcon(getClass().getResource("grid3.png"));
+		ImageIcon background = new ImageIcon(getClass().getResource("/Backgrounds/grid3.png"));
 		JLabel pane = new JLabel(background);
 		pane.setLayout(new GridBagLayout());
 		GridBagConstraints gb = new GridBagConstraints();

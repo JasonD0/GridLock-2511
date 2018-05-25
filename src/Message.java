@@ -87,21 +87,28 @@ public class Message {
 	 */
 	private JLabel messageText() {
 		// Create ribbon image
-		ImageIcon ribbon = new ImageIcon(getClass().getResource("ribbon3.png"));
+		ImageIcon ribbon = new ImageIcon(getClass().getResource("/icons/ribbon3.png"));
 		Image ribbonImage = ribbon.getImage();
 		ribbonImage = ribbonImage.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
 		ribbon = new ImageIcon(ribbonImage);
 
+		int gold = frame.goldReward();
 		// Create level completion message
 		if (reward == true) {
 			animalReward = getAnimal();
 			frame.getUser().saveCollectible(animalReward);
-			int gold = frame.difficulty();
 			frame.getUser().addMoney(gold);
+		} else {
+			animalReward = "penalty";
+			gold = 0;
+			
 		}
-		else animalReward = "penalty";
 		String second = (time == 1) ? " second" : " seconds"; 
-		String text = "<html><body width='" + 200 + "'><h1>Congratulations</h1> <p>You got the " + animalReward + "! <p/> <p>Number of Moves : " + movesMade + "</p><br />" + "<p>Time : " + time + second + "</p></html>";
+		String text = "<html><body width='" + 200 + "'><h1>Congratulations</h1> "
+						+ "<p>You got the " + animalReward + "! <p/> "
+						+ "<p> You earned " + gold + "!</p><br/> "
+						+ "<p>Number of Moves : " + movesMade + "</p><br />" 
+						+ "<p>Time : " + time + second + "</p></html>";
 		JLabel message = new JLabel(text, ribbon, SwingConstants.CENTER);
 
 		message.setHorizontalTextPosition(JLabel.RIGHT);
@@ -117,19 +124,19 @@ public class Message {
 	 */
 	private void initButtons(JOptionPane pane) {
 		// Create home button
-		ImageIcon homeIcon = new ImageIcon(getClass().getResource("home1.png"));
+		ImageIcon homeIcon = new ImageIcon(getClass().getResource("/buttons/home1.png"));
 		home = setOptionPaneButton(pane, "Home  ", homeIcon, 0);
 
 		// Create retry button
-		ImageIcon retryIcon = new ImageIcon(getClass().getResource("retry1.png"));
+		ImageIcon retryIcon = new ImageIcon(getClass().getResource("/buttons/retry1.png"));
 		retry = setOptionPaneButton(pane, "Retry  ", retryIcon, 1);
 
 		// create next button
-		ImageIcon nextIcon = new ImageIcon(getClass().getResource("next1.png"));
+		ImageIcon nextIcon = new ImageIcon(getClass().getResource("/buttons/next1.png"));
 		next = setOptionPaneButton(pane, "Next  ", nextIcon, 2);
 
 		// create exit button
-		ImageIcon exitIcon = new ImageIcon(getClass().getResource("exit1.png"));
+		ImageIcon exitIcon = new ImageIcon(getClass().getResource("/buttons/exit1.png"));
 		exit = setOptionPaneButton(pane, "Exit  ", exitIcon, 3);
 	}
 
@@ -154,8 +161,8 @@ public class Message {
 				pane.setValue(option);
 				switch (option) {
 				case 0: frame.mainMenu(); break;
-				case 1: frame.newPuzzlePanel(); break;
-				case 2: /*generate next level (?)*/break;
+				case 1: frame.newPuzzlePanel("retry"); break;
+				case 2: frame.newPuzzlePanel(frame.getDifficulty()); break;
 				case 3: frame.dispose(); break;
 				}
 			}
@@ -177,6 +184,8 @@ public class Message {
 	private String getAnimal() {
 		Random random = new Random();
 		int randNum = random.nextInt(1000 -1 + 1) + 1;	// gets number from 1 to 1000    max-min+1  + min
+		// int difficultyNumBonus = random ...   -> put to 1st two if -> increase chance and reduce number for others (hard)     intermediate -> reduce number for others
+		
 		animals.clear();
 		if (randNum == 233) {
 			animals.addAll(Arrays.asList("money_pig"));			
@@ -184,11 +193,11 @@ public class Message {
 			animals.addAll(Arrays.asList("rubber_duck"));
 		} else if (randNum >= 1 && randNum <= 500) {
 			animals.addAll(Arrays.asList("cat", "dog", "pig", "rabbit", "rat", "shark"));
-		} else if (randNum > 500 && randNum <= 850) {
+		} else if (randNum > 500  && randNum <= 850 ) {
 			animals.addAll(Arrays.asList("beetle", "cow", "owl", "sheep", "snake", "turtle"));
-		} else if (randNum > 850 && randNum <= 950) {
+		} else if (randNum > 850  && randNum <= 950 ) {
 			animals.addAll(Arrays.asList("crab", "hen", "duck", "rooster"));
-		} else if (randNum > 950 && randNum <= 1000) {
+		} else if (randNum > 950  && randNum <= 1000) {
 			animals.addAll(Arrays.asList("goat", "horse"));
 		}
 		Collections.shuffle(animals);

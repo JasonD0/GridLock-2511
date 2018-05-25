@@ -30,8 +30,8 @@ public class GridLockGrid extends JPanel {
 	private final int GRID_HEIGHT = 601;
 	private final int GRID_LENGTH = 601;
 	private final int BORDER_OFFSET = 0;
-	private List<Car> carList;
-	private List<String> colors;
+	private ArrayList<Car> carList;
+	private ArrayList<String> colors;
 	private Map<Integer, String> carColor;
 	private Car selected;
 	private Puzzle current;

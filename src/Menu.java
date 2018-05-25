@@ -39,7 +39,7 @@ public class Menu extends JPanel {
 		start.setAlignmentX(CENTER_ALIGNMENT);
 		start.setBorderPainted(false);
 		start.setFocusable(false);
-		Image menuIcon = new ImageIcon(getClass().getResource("button_play (1).png")).getImage();
+		Image menuIcon = new ImageIcon(getClass().getResource("/buttons/button_play (1).png")).getImage();
 		menuIcon = menuIcon.getScaledInstance(110, 61, Image.SCALE_SMOOTH);
 		start.setIcon(new ImageIcon(menuIcon));
 		start.setContentAreaFilled(false);
@@ -59,7 +59,7 @@ public class Menu extends JPanel {
 		miniGame.setAlignmentX(CENTER_ALIGNMENT);
 		miniGame.setBorderPainted(false);
 		miniGame.setFocusable(false);
-		miniGamePng = "miniGame_";
+		miniGamePng = "/buttons/miniGame_";
 		
 		// check mini game accessible
 		if (game.getUser().checkMiniGameAccess() == 1 || game.getUser().checkAllCollectibles() == true) {
@@ -77,7 +77,7 @@ public class Menu extends JPanel {
 		miniGame.addActionListener(new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (miniGamePng.equals("miniGame_unlocked.png")) game.miniGame();
+				if (miniGamePng.equals("/buttons/miniGame_unlocked.png")) game.miniGame();
 			}
 		});
 		box.add(miniGame);
@@ -89,7 +89,7 @@ public class Menu extends JPanel {
 		help.setBorderPainted(false);
 		help.setFocusable(false);
 		
-		Image helpIcon = new ImageIcon(getClass().getResource("button_help.png")).getImage();
+		Image helpIcon = new ImageIcon(getClass().getResource("/buttons/button_help.png")).getImage();
 		helpIcon = helpIcon.getScaledInstance(110, 60, Image.SCALE_SMOOTH);
 		help.setIcon(new ImageIcon(helpIcon));
 		help.setContentAreaFilled(false);
@@ -110,7 +110,7 @@ public class Menu extends JPanel {
 		quit.setBorderPainted(false);
 		quit.setFocusable(false);
 		
-		Image quitIcon = new ImageIcon(getClass().getResource("button_exit.png")).getImage();
+		Image quitIcon = new ImageIcon(getClass().getResource("/buttons/button_exit.png")).getImage();
 		quitIcon = quitIcon.getScaledInstance(110, 60, Image.SCALE_SMOOTH);
 		quit.setIcon(new ImageIcon(quitIcon));
 		quit.setContentAreaFilled(false);
@@ -142,6 +142,6 @@ public class Menu extends JPanel {
 	 * @param g
 	 */
 	public void draw(Graphics g) {
-		g.drawImage(new ImageIcon(Menu.class.getResource("menugif1.gif")).getImage(), 0, 0, 680, 658, this);
+		g.drawImage(new ImageIcon(Menu.class.getResource("/Backgrounds/menugif1.gif")).getImage(), 0, 0, 680, 658, this);
 	}
 }

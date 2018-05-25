@@ -109,11 +109,12 @@ public class GridButtonsPanel extends JPanel{
 		message.setForeground(Color.WHITE);
 
 		// create buy button
-		buyingCost = "$150";
+		buyingCost = "Penalty";
 		JButton buy = new JButton();
 		if (frame.getUser().getFreeDeletes() > 0) buyingCost = "$0";
-		buy.setText("Buy " + buyingCost);
-
+		else if (frame.getUser().getMoney() >= 150) buyingCost = "$150"; 
+		buy.setText("Cost " + buyingCost);
+	
 		buy.setFocusable(false);
 		buy.setBorderPainted(false);
 		buy.setOpaque(false);
@@ -138,16 +139,15 @@ public class GridButtonsPanel extends JPanel{
 						frame.getUser().withdrawMoney(150);
 					}
 					frame.getUser().setFreeDeleteUsed(true);
-					// sets cursor image 
-					if (grid.checkHelp() == false) {
-						grid.setHelp(true);
-						Image cursorImage = new ImageIcon(getClass().getResource("/icons/delete1.png")).getImage();
-						cursorImage = cursorImage.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-						grid.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(cursorImage, new Point(0,0), "cursor"));
-					} else {
-						grid.setHelp(false);
-						grid.setCursor(null);
-					}
+				}
+				// sets cursor image 
+				if (grid.checkHelp() == false) {
+					grid.setHelp(true);
+					Image cursorImage = new ImageIcon(getClass().getResource("/icons/delete1.png")).getImage();
+					grid.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(cursorImage, new Point(0,0), "cursor"));
+				} else {
+					grid.setHelp(false);
+					grid.setCursor(null);
 				}
 				JOptionPane.getRootFrame().dispose();
 				dialog.dispose();
@@ -282,7 +282,7 @@ public class GridButtonsPanel extends JPanel{
 		resetButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				frame.newPuzzlePanel();	
+				frame.newPuzzlePanel("reset");	
 				frame.stopTimer();
 			}
 		});
