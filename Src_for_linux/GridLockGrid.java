@@ -55,7 +55,7 @@ public class GridLockGrid extends JPanel {
 		movesMade = 0;
 
 		// add grid background
-		ImageIcon background = new ImageIcon(getClass().getResource("/Backgrounds/grid3.png"));
+		ImageIcon background = new ImageIcon("grid3.png");
 		JLabel pane = new JLabel(background);
 		pane.setLayout(new GridBagLayout());
 		GridBagConstraints gb = new GridBagConstraints();
@@ -267,20 +267,20 @@ public class GridLockGrid extends JPanel {
 					if (car.isRed() == true && !carColor.get(car.getId()).equals("red"))  carColor.put(car.getId(), "red");
 
 					// sets car image 
-					String carImagePath = "/cars/" + carColor.get(car.getId());				
+					String carImagePath = carColor.get(car.getId());				
 					if (car.getSize() == 3) carImagePath += "_truck_" + car.orientation() + ".png";
 					else if (car.getSize() == 2) carImagePath += "_car_" + car.orientation() + ".png";
-					Image carImage = new ImageIcon(getClass().getResource(carImagePath)).getImage();
+					Image carImage = new ImageIcon(carImagePath).getImage();
 					g2.drawImage(carImage, car.getX(), car.getY(), null);
 				}
 			}
 
 			// draw selected car
 			if (selected != null) {
-				String carImagePath = "/cars/" + carColor.get(selected.getId());
+				String carImagePath = carColor.get(selected.getId());
 				if (selected.getSize() == 3) carImagePath += "_truck_" + selected.orientation() + ".png";
 				else if (selected.getSize() == 2) carImagePath += "_car_" + selected.orientation() + ".png";
-				Image carImage = new ImageIcon(getClass().getResource(carImagePath)).getImage();
+				Image carImage = new ImageIcon((carImagePath)).getImage();
 				g2.drawImage(carImage, selected.getX(), selected.getY(), null);			
 			}
 			g2.dispose();

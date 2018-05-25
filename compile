@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # find all java source files in src directory
-FILES=$(find src -iname "*.java")
+FILES=$(find Src_for_linux -iname "*.java")
 
 rm -rf bin
 mkdir -p bin
@@ -10,7 +10,7 @@ mkdir -p bin
 for file in $FILES
 do
     echo "compiling $file"
-    javac -cp "./src/" -d bin $file
+    javac -cp "./Src_for_linux/" -d bin $file
     if [ $? -ne 0 ]
     then
         exit 1

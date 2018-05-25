@@ -195,9 +195,9 @@ public class GridLockFrame extends JFrame implements Runnable {
 		setMinimumSize(new Dimension(MENU_LENGTH, MENU_HEIGHT));
 		setSize(new Dimension(MENU_LENGTH, MENU_HEIGHT));
 		setFocusable(true);
-		mainMenu();
-		// miniGame();
 
+		mainMenu();
+		
 		pack();
 		setVisible(true);
 		setResizable(false);

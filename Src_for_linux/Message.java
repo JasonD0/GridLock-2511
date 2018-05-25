@@ -87,7 +87,7 @@ public class Message {
 	 */
 	private JLabel messageText() {
 		// Create ribbon image
-		ImageIcon ribbon = new ImageIcon(getClass().getResource("/icons/ribbon3.png"));
+		ImageIcon ribbon = new ImageIcon(("ribbon3.png"));
 		Image ribbonImage = ribbon.getImage();
 		ribbonImage = ribbonImage.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
 		ribbon = new ImageIcon(ribbonImage);
@@ -123,19 +123,19 @@ public class Message {
 	 */
 	private void initButtons(JOptionPane pane) {
 		// Create home button
-		ImageIcon homeIcon = new ImageIcon(getClass().getResource("/buttons/home1.png"));
+		ImageIcon homeIcon = new ImageIcon(("home1.png"));
 		home = setOptionPaneButton(pane, "Home  ", homeIcon, 0);
 
 		// Create retry button
-		ImageIcon retryIcon = new ImageIcon(getClass().getResource("/buttons/retry1.png"));
+		ImageIcon retryIcon = new ImageIcon(("retry1.png"));
 		retry = setOptionPaneButton(pane, "Retry  ", retryIcon, 1);
 
 		// create next button
-		ImageIcon nextIcon = new ImageIcon(getClass().getResource("/buttons/next1.png"));
+		ImageIcon nextIcon = new ImageIcon(("next1.png"));
 		next = setOptionPaneButton(pane, "Next  ", nextIcon, 2);
 
 		// create exit button
-		ImageIcon exitIcon = new ImageIcon(getClass().getResource("/buttons/exit1.png"));
+		ImageIcon exitIcon = new ImageIcon(("exit1.png"));
 		exit = setOptionPaneButton(pane, "Exit  ", exitIcon, 3);
 	}
 

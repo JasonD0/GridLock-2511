@@ -27,7 +27,7 @@ public class Help extends JPanel {
 
         // create the exit button to return to the main menu
         add(Box.createVerticalStrut(160));
-        ImageIcon startIcon = new ImageIcon(Menu.class.getResource("/buttons/button_exit.png"/*return*/));
+        ImageIcon startIcon = new ImageIcon("button_exit.png");
         Return.setIcon(startIcon);
         Return.setBounds(295,500, 88,43);
         Return.addActionListener(new AbstractAction() {
@@ -71,6 +71,6 @@ public class Help extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(new ImageIcon(Menu.class.getResource("/Backgrounds/helpBackground.png")).getImage(), 0, 0, 697, 696, this);
+        g.drawImage(new ImageIcon("helpBackground.png").getImage(), 0, 0, 697, 696, this);
     }
 }

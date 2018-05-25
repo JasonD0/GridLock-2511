@@ -63,7 +63,7 @@ public class MoneyPig extends JLabel{
 	 * Create image for the pig
 	 */
 	private void makeImage() {
-		pigImage = new ImageIcon(getClass().getResource("/icons/mini_game_pig.png")).getImage();
+		pigImage = new ImageIcon(("mini_game_pig.png")).getImage();
 		pigImage = pigImage.getScaledInstance(pigLength, pigLength, Image.SCALE_SMOOTH);
 	}
 	

@@ -76,7 +76,7 @@ public class GridButtonsPanel extends JPanel{
 		deleteButton.setToolTipText("Delete Car");
 
 		// set button image
-		Image deleteIcon = new ImageIcon(getClass().getResource("/buttons/edit.png")).getImage();
+		Image deleteIcon = new ImageIcon(("edit.png")).getImage();
 		deleteIcon = deleteIcon.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
 		deleteButton.setIcon(new ImageIcon(deleteIcon));
 		deleteButton.setContentAreaFilled(false);
@@ -122,9 +122,9 @@ public class GridButtonsPanel extends JPanel{
 		buy.setBackground(new Color(51,51,51));
 		buy.setForeground(Color.WHITE);
 		
-		Image buyImage = new ImageIcon(getClass().getResource("/buttons/buy.png")).getImage();
+		Image buyImage = new ImageIcon(("buy.png")).getImage();
 		if (frame.getUser().getMoney() < 150 && frame.getUser().getFreeDeletes() <= 0) {
-			buyImage = new ImageIcon(getClass().getResource("/buttons/buyFalse.png")).getImage();
+			buyImage = new ImageIcon(("buyFalse.png")).getImage();
 			buy.setContentAreaFilled(false);
 		}
 		buyImage = buyImage.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
@@ -146,7 +146,8 @@ public class GridButtonsPanel extends JPanel{
 				// sets cursor image 
 				if (grid.checkHelp() == false) {
 					grid.setHelp(true);
-					Image cursorImage = new ImageIcon(getClass().getResource("/icons/delete1.png")).getImage();
+					Image cursorImage = new ImageIcon(("delete1.png")).getImage();
+					cursorImage = cursorImage.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
 					grid.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(cursorImage, new Point(0,0), "cursor"));
 				} else {
 					grid.setHelp(false);
@@ -165,7 +166,7 @@ public class GridButtonsPanel extends JPanel{
 		goBack.setBackground(new Color(51,51,51));
 		goBack.setForeground(Color.WHITE);
 		
-		Image goBackImage = new ImageIcon(getClass().getResource("/buttons/return.png")).getImage();
+		Image goBackImage = new ImageIcon(("return.png")).getImage();
 		goBackImage = goBackImage.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
 		goBack.setIcon(new ImageIcon(goBackImage));
 		
@@ -202,9 +203,9 @@ public class GridButtonsPanel extends JPanel{
 		musicButton.setToolTipText("Audio On/Off");
 
 		// set button image
-		Image musicIcon = new ImageIcon(getClass().getResource("/buttons/audio_off1.png")).getImage();
+		Image musicIcon = new ImageIcon(("audio_off1.png")).getImage();
 		if (audio) {
-			musicIcon = new ImageIcon(getClass().getResource("/buttons/audio_on1.png")).getImage();
+			musicIcon = new ImageIcon(("audio_on1.png")).getImage();
 			// music plays
 		} else {
 			// music stops
@@ -217,7 +218,7 @@ public class GridButtonsPanel extends JPanel{
 		musicButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Image musicIcon = new ImageIcon(getClass().getResource("/buttons/audio_off1.png")).getImage();
+				Image musicIcon = new ImageIcon(("audio_off1.png")).getImage();
 				// stop music
 				if (audio) {
 					audio = false;
@@ -226,7 +227,7 @@ public class GridButtonsPanel extends JPanel{
 				} else {
 					audio = true;
 					// play music
-					musicIcon = new ImageIcon(getClass().getResource("/buttons/audio_on1.png")).getImage();
+					musicIcon = new ImageIcon(("audio_on1.png")).getImage();
 				}
 				musicIcon = musicIcon.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
 				musicButton.setIcon(new ImageIcon(musicIcon));
@@ -249,7 +250,7 @@ public class GridButtonsPanel extends JPanel{
 		menuButton.setToolTipText("Return Home");
 
 		// set button image
-		Image menuIcon = new ImageIcon(getClass().getResource("/buttons/home1.png")).getImage();
+		Image menuIcon = new ImageIcon(("home1.png")).getImage();
 		menuIcon = menuIcon.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
 		menuButton.setIcon(new ImageIcon(menuIcon));
 		menuButton.setContentAreaFilled(false);
@@ -276,7 +277,7 @@ public class GridButtonsPanel extends JPanel{
 		resetButton.setToolTipText("Restart Puzzle");
 
 		// set button image
-		Image resetIcon = new ImageIcon(getClass().getResource("/buttons/reset1.png")).getImage();
+		Image resetIcon = new ImageIcon(("reset1.png")).getImage();
 		resetIcon = resetIcon.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
 		resetButton.setIcon(new ImageIcon(resetIcon));
 		resetButton.setContentAreaFilled(false);

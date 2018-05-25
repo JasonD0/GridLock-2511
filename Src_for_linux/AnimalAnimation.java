@@ -29,7 +29,7 @@ public class AnimalAnimation extends JLabel{
 	 * @param animalReward    animal name of the reward
 	 */
 	public AnimalAnimation(String animalReward) {
-		ImageIcon animalIcon = new ImageIcon(getClass().getResource("/animals/" + animalReward + ".png"));
+		ImageIcon animalIcon = new ImageIcon((animalReward + ".png"));
 		animal = animalIcon.getImage();
 		
 		timer = new Timer(55, new ActionListener() {
