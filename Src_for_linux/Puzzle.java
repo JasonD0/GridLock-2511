@@ -159,8 +159,8 @@ public class Puzzle {
 			carList.add(new Car(0 + 400, 0 + 400, 200, 100, "h", 2, 7, false));
 			carList.add(new Car(0 + 400, 0 + 200, 100, 300, "v", 2, 8, false));
 			carList.add(new Car(0 + 500, 0 + 100, 100, 300, "v", 3, 9, false));
-			carList.add(new Car(0 + 300, 0, 100, 300, "h", 3, 10, false));
-			carList.add(new Car(0 + 300, 0 + 100, 100, 300, "v", 2, 11, false));
+			carList.add(new Car(0 + 300, 0, 300, 100, "h", 3, 10, false));
+			carList.add(new Car(0 + 300, 0 + 100, 100, 200, "v", 2, 11, false));
 		}
 		if (difficulty.equals("hard")) {
 			gridState = new int[][] {
@@ -177,7 +177,7 @@ public class Puzzle {
 			carList.add(newOne);     
 			carList.add(new Car(0 + 100, 0 + 300, 200, 100, "h", 2, 2, false));
 			carList.add(new Car(0 + 100, 0 + 200, 200, 100, "h", 2, 3, true));
-			carList.add(new Car(0 + 500, 0 + 300, 200, 100, "v", 3, 4, false));
+			carList.add(new Car(0 + 500, 0 + 300, 100, 300, "v", 3, 4, false));
 			carList.add(new Car(0 + 300, 0 + 200, 100, 300, "v", 3, 5, false));
 			carList.add(new Car(0 + 200, 0 + 500, 200, 100, "h", 2, 6, false));
 
