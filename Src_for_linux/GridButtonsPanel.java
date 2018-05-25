@@ -97,7 +97,7 @@ public class GridButtonsPanel extends JPanel{
 	private void buyOptionPane() {
 		UIManager.put("Panel.background", new Color(51,51,51));
 		UIManager.put("OptionPane.background", new Color(51,51,51));
-
+		UIManager.put("OptionPane.minimumSize", new Dimension(300, 90));
 		// Create shop window
 		JOptionPane pane = new JOptionPane();	
 		JPanel panel = new JPanel(new BorderLayout());
